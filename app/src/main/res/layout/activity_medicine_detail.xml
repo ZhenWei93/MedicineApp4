@@ -13,17 +13,17 @@
         tools:layout_editor_absoluteX="209dp"
         tools:layout_editor_absoluteY="-108dp">
 
-        <EditText
-            android:id="@+id/medicineCodeEditText"
-            android:layout_width="1023dp"
-            android:layout_height="74dp"
-            android:hint="請輸入藥品代碼" />
+<!--        <EditText-->
+<!--            android:id="@+id/medicineCodeEditText"-->
+<!--            android:layout_width="1023dp"-->
+<!--            android:layout_height="74dp"-->
+<!--            android:hint="請輸入藥品代碼" />-->
 
-        <Button
-            android:id="@+id/fetchMedicineButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="確認搜尋" />
+<!--        <Button-->
+<!--            android:id="@+id/fetchMedicineButton"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="確認搜尋" />-->
 
         <LinearLayout
             android:layout_width="match_parent"

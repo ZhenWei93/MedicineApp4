@@ -58,7 +58,7 @@ object ApiUtility
                 }
 
                 val gson = Gson()
-                val responseData = gson.fromJson(jsonString, responseData::class.java)
+                val responseData = gson.fromJson(jsonString, MedicineDetailsResponseData::class.java)
 
                 callback(responseData.result) // 回傳解析後的資料
             }

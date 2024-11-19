@@ -1,7 +1,7 @@
 package edu.fju.medicineapp
 
 // 資料類別，用於解析 JSON 回應
-data class responseData(
+data class MedicineDetailsResponseData(
     val result: Medicine
 )
 data class ResponseData(
