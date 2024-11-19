@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/genericNameTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="學名: " />
+
+        <TextView
+            android:id="@+id/chineseBrandNameTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="中文藥名:" />
+
+        <TextView
+            android:id="@+id/englishBrandNameTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="英文藥名: " />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    tools:context=".SearchMedicineActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <EditText
+            android:id="@+id/medicineListEditText"
+            android:layout_width="match_parent"
+            android:layout_height="101dp"
+            android:hint="輸入藥名" />
+
+        <Button
+            android:id="@+id/searchMedicineButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="搜尋" />
+
+        <TextView
+            android:id="@+id/responseTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="提示藥品資訊是否查詢成功" />
+
+        <TextView
+            android:id="@+id/genericNameTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="學名: " />
+
+        <TextView
+            android:id="@+id/chineseBrandNameTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="中文藥名:" />
+
+        <TextView
+            android:id="@+id/englishBrandNameTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="英文藥名: " />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="16dp"/>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

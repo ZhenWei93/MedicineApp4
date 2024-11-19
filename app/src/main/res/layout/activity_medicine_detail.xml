@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp"
+        tools:layout_editor_absoluteX="209dp"
+        tools:layout_editor_absoluteY="-108dp">
+
+        <EditText
+            android:id="@+id/medicineCodeEditText"
+            android:layout_width="1023dp"
+            android:layout_height="74dp"
+            android:hint="請輸入藥品代碼" />
+
+        <Button
+            android:id="@+id/fetchMedicineButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="確認搜尋" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="216dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/imageAPathImageView"
+                android:layout_width="185dp"
+                android:layout_height="186dp" />
+
+            <ImageView
+                android:id="@+id/imageBPathImageView"
+                android:layout_width="197dp"
+                android:layout_height="186dp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/responseTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="提示藥品資訊是否查詢成功" />
+
+        <TextView
+            android:id="@+id/genericNameTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="學名: " />
+
+        <TextView
+            android:id="@+id/chineseBrandNameTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="中文藥名: " />
+
+        <TextView
+            android:id="@+id/englishBrandNameTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="英文藥名: " />
+
+        <TextView
+            android:id="@+id/appearanceTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="外觀: " />
+
+        <TextView
+            android:id="@+id/dosageTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="劑量: " />
+
+        <TextView
+            android:id="@+id/purposeTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="主要功能: " />
+
+        <TextView
+            android:id="@+id/storageMethodTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="保存方法: " />
+
+        <TextView
+            android:id="@+id/sideEffectTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="常見副作用: " />
+
+        <TextView
+            android:id="@+id/noticeTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="注意: " />
+
+        <TextView
+            android:id="@+id/pregnancyBreastFeedingChildNoticeTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="孕婦、母乳哺育孩子須知: " />
+
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
