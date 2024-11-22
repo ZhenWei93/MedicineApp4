@@ -6,5 +6,5 @@ data class MedicineDetailsResponseData(
 )
 data class ResponseData(
     val status: String,
-    val result: List<Medicines> // 确认result类型为List<Medicine>
+    val result: List<Medicines> // 確認result類行為List<Medicine>
 )
