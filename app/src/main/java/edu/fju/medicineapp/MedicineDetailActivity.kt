@@ -89,17 +89,6 @@ class MedicineDetailActivity : AppCompatActivity()
 
                         // 設定仿單按鈕點擊事件
                         packageInsertPathButton.setOnClickListener {
-//                            val pdfUrl = medicine.packageInsertPath
-//                            if (!pdfUrl.isNullOrEmpty()) {
-//                                Log.i(TAG, "成功取得藥品仿單: $pdfUrl")
-//                                // 創建 Intent 啟動 PdfViewerActivity，並傳遞 PDF URL
-//                                val intent = Intent(this, PdfViewerActivity::class.java)
-//                                intent.putExtra("PDF_URL", pdfUrl)
-//                                startActivity(intent) // 啟動 PdfViewerActivity
-//                            } else {
-//                                Log.e(TAG, "藥品仿單 URL 無效")
-//                                Toast.makeText(this, "藥品仿單無法顯示", Toast.LENGTH_SHORT).show()
-//                            }
                             registerReceiver()
                             startDownload()
                         }
@@ -116,11 +105,15 @@ class MedicineDetailActivity : AppCompatActivity()
     }
 
         var pdf = "https://www.skh.org.tw/Pharmacy_img/202403120951121MLD01.pdf"
-        var pdfFromUri = Uri.parse(pdf)
+        var pdfFromUri = Uri.parse(pdf)   // 將 PDF 的 URL 轉換為 Uri 格式，方便後續處理
+
+        // 自定義一個函數，用來根據 PDF 的 URL 生成一個唯一的檔案名稱，並加上 ".pdf" 作為檔案後綴
         fun getCustomFileName(pdfUrl: String): String
         {
             return EncryptUtility.encodeMd5(pdfUrl) + PDFDetector.File_Extension_PDF
         }
+
+        // 啟動 PDF 下載的功能
         fun startDownload()
         {
             pdfFromUri?.let()
@@ -128,36 +121,34 @@ class MedicineDetailActivity : AppCompatActivity()
 
                 var pdfUrl      = pdfFromUri.toString() // 用 pdfFromUri.path 會分開網域跟路徑
                 var pdfFileName = getCustomFileName(pdfUrl)
-                var uri         = DownloadUtility.getInstance().findDownloadFile(this, DownloadInfo.Dir_Name_PDF, pdfFileName)
+                var uri         = DownloadUtility.getInstance().findDownloadFile(this, DownloadInfo.Dir_Name_PDF, pdfFileName)  // 檢查是否已經下載過該檔案，若有則返回檔案的本地 Uri
 
                 SOUT.Loge(TAG, "pdfFileName: $pdfFileName")
                 SOUT.Loge(TAG, "pdfFromUri: $pdfUrl")
                 SOUT.Loge(TAG, "uri: $uri")
 
-                if (uri != null)
+                if (uri != null)   // 如果檔案已存在，則觸發下載完成的監聽事件
                     DownloadUtility.getInstance().getDownloadlistener()?.onDownLoadFinish(uri)
-                else
+                else               // 如果檔案不存在，開始下載，並提供相關參數設定
                     DownloadUtility.getInstance().startDownload(this, pdfUrl, DownloadInfo.Dir_Name_PDF, pdfFileName, false, "", getString(R.string.pdf_downloading))
             }
         }
 
-        fun registerReceiver()
-        {
+        // 註冊下載完成的廣播接收器，用於監聽下載過程的事件
+        fun registerReceiver() {
             SOUT.Loge(TAG, "registerReceiver")
-            DownloadUtility.getInstance().registerReceiver(this, object: DownloadInterface
-            {
-                override fun onStart()
-                {
+            DownloadUtility.getInstance().registerReceiver(this, object: DownloadInterface {
+                override fun onStart() {
                     SOUT.Loge(TAG, "1. onStart")
                 }
 
-                override fun onDownLoadFinish(uri: Uri)
-                {
+                // 當下載完成時的回調
+                override fun onDownLoadFinish(uri: Uri) {
                     SOUT.Loge(TAG, "2. onDownLoadFinish 1: " + pdfFromUri?.toString())
                     SOUT.Loge(TAG, "2. onDownLoadFinish 2: " + uri.toString())
 
-                    var pdfFile = DownloadInfo.getFileFromUri(this@MedicineDetailActivity, uri)
-                    var text = PDFUtility.getText(this@MedicineDetailActivity, pdfFile)
+                    var pdfFile = DownloadInfo.getFileFromUri(this@MedicineDetailActivity, uri)   // 將下載完成的 Uri 轉換為本地檔案
+                    var text = PDFUtility.getText(this@MedicineDetailActivity, pdfFile)         // 使用 PDFUtility 從檔案中提取文字內容
 
                 }
 
@@ -170,27 +161,4 @@ class MedicineDetailActivity : AppCompatActivity()
 
 }
 
-//// PdfViewerActivity 用於顯示 PDF 仿單
-//class PdfViewerActivity : AppCompatActivity() {
-//    val TAG = PdfViewerActivity::class.java.simpleName.toString()
-//
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        setContentView(R.layout.activity_pdf_viewer)
-//
-//        // WebView 元件用於顯示網頁內容
-//        val webView: WebView = findViewById(R.id.webView)
-//        val pdfUrl = intent.getStringExtra("PDF_URL")
-//
-//        if (pdfUrl != null) {
-//            Log.i(TAG, "Opening PDF: $pdfUrl")
-//            webView.settings.javaScriptEnabled = true
-//            webView.settings.cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK   // 設定 WebView 的快取模式為 LOAD_CACHE_ELSE_NETWORK，如果網路不可用，則嘗試從快取加載內容
-//            webView.webViewClient = WebViewClient()   // 指定 WebView 的客戶端，以避免跳轉到其他瀏覽器
-//            // 使用 Google Docs 的線上顯示功能來顯示 PDF
-//            webView.loadUrl("https://docs.google.com/viewer?url=$pdfUrl")
-//        } else {
-//            Log.e(TAG, "PDF URL is null")
-//        }
-//    }
-//}
+
