@@ -1,13 +1,21 @@
 package edu.fju.medicineapp
 
+import android.content.Context
+import android.os.Bundle
+import android.view.View
+import android.view.inputmethod.InputMethodManager
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
-import okhttp3.Call
-import okhttp3.Callback
+import edu.fju.medicineapp.utility.SOUT
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody
-import okhttp3.Response
 import java.io.IOException
 
 // =================================================================================================
@@ -51,14 +59,14 @@ object AIModel
     //  Tool 是用來描述應用程式可以執行的API，讓模型知道有哪些 API 可以調用 以及 調用這些 API 需要哪些參數。
     //  這些工具允許模型在回應用戶問題時，根據需求自動決定是否呼叫工具。
     val tools = listOf(
-        Tool(
-            name = "queryAppointmentByDepartmentAndDate",
-            description = "Query available appointments by department and date.",
-            parameters = ToolParameters(
-                properties = mapOf("department_name"   to ToolParameterProperty(type = "string", description = "Name of the department"),
-                    "date"              to ToolParameterProperty(type = "string", description = "Appointment date in YYYY-MM-DD format")),
-                required = listOf("department_name", "date")))
-    )
+                        Tool(
+                            name = "queryAppointmentByDepartmentAndDate",
+                            description = "Query available appointments by department and date.",
+                            parameters = ToolParameters(
+                                properties = mapOf("department_name"   to ToolParameterProperty(type = "string", description = "Name of the department"),
+                                                   "date"              to ToolParameterProperty(type = "string", description = "Appointment date in YYYY-MM-DD format")),
+                                required = listOf("department_name", "date")))
+                      )
 }
 
 data class OpenAIBody(
@@ -84,9 +92,9 @@ class AIConversation
     // 我們在這邊已經先編織一個 時空背景 叫做  "我是新光醫院的助手，如果需要掛號服務，請跟我說！"
     // 這樣之後對話 OpenAI 就會以為自己是這樣一個角色
     val conversationHistory = mutableListOf( mapOf("role" to "system",
-        "content" to "我是新光醫院的助手，如果需要掛號服務，請跟我說！") ,
+        "content" to "我是新光醫院的助手，如果需要掛號服務，請跟我說！"),
         mapOf("role" to "system",
-            "content" to "我是藥物資訊專家，可以簡化藥品資訊！") )
+            "content" to "我是用藥資訊諮詢助手！"))
 
     fun addHistory(newConversation: Map<String, String>): List<Map<String, String>>
     {
@@ -94,62 +102,65 @@ class AIConversation
         return conversationHistory
     }
 
-    fun getCompletion(prompt: String, aici: AIConversationInterface?)
-    {
+    fun getCompletion(
+        prompt: String,
+        aici: AIConversationInterface?,
+        customPrompt: Boolean = false,
+        callback: ((String) -> Unit)? = null
+    ) {
         this.aici = aici
+
+        // 構造 Prompt：摘要模式或一般模式
+        val prompt = if (customPrompt) {
+            "幫我將仿單資料統整成50字: $prompt"
+        } else {
+            prompt
+        }
 
         val requestBody = OpenAIBody(
             model = AIModel.model,
-            messages = addHistory(mapOf("role" to "user", "content" to prompt)),          //  role 為 user 指用戶輸入的訊息。
+            messages = addHistory(mapOf("role" to "user", "content" to prompt)), // role 為 user 指用戶輸入的訊息
             functions = AIModel.tools
         )
 
-        val request = Request   .Builder()
+        val request = Request.Builder()
             .url(AIModel.urlString)
             .addHeader("Authorization", "Bearer ${AIModel.key}")
             .post(RequestBody.create("application/json".toMediaTypeOrNull(), Gson().toJson(requestBody)))
             .build()
 
-        client
-            .newCall(request)
-            .enqueue(object: Callback
-            {
-                override fun onFailure(call: Call, e: IOException)
-                {
-                    e.printStackTrace()
-                }
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+            }
 
-                override fun onResponse(call: Call, response: Response)
-                {
-                    response.body?.string()?.let()
-                    { responseBody ->
-                        val json = Gson().fromJson(responseBody, Map::class.java) as Map<*, *>
-
-                        handleApiResponse(json)
-                    }
+            override fun onResponse(call: Call, response: Response) {
+                response.body?.string()?.let { responseBody ->
+                    val json = Gson().fromJson(responseBody, Map::class.java) as Map<*, *>
+                    handleApiResponse(json, callback)
                 }
-            })
+            }
+        })
     }
 
-    private fun handleApiResponse(json: Map<*, *>)
-    {
+    private fun handleApiResponse(json: Map<*, *>, callback: ((String) -> Unit)?) {
         val choices = json["choices"] as? List<Map<*, *>>
         val message = choices?.firstOrNull()?.get("message") as? Map<*, *>
 
-        message?.let()
-        {
+        message?.let {
             val functionCall = it["function_call"] as? Map<*, *>
-            if (functionCall != null)
-            {
+            if (functionCall != null) {
                 handleFunctionCall(functionCall)
                 return
             }
 
             val content = it["content"] as? String
-            if (content != null)
-            {
-                handleContent(content)
-                return
+            if (content != null) {
+                if (callback != null) {
+                    callback(content) // 使用回调传递结果
+                } else {
+                    handleContent(content) // 默认处理
+                }
             }
         }
     }
@@ -180,4 +191,8 @@ class AIConversation
 
         aici?.handleContent(content)
     }
+
+
 }
+
+

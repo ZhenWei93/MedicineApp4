@@ -38,6 +38,8 @@ class MedicineDetailActivity : AppCompatActivity()
     private lateinit var packageInsertPathButton: Button
     private lateinit var imageAPathImageView: ImageView
     private lateinit var imageBPathImageView: ImageView
+    private var extractedText: String? = null // 儲存從 PDF 提取的文字內容
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,6 +93,9 @@ class MedicineDetailActivity : AppCompatActivity()
                         packageInsertPathButton.setOnClickListener {
                             registerReceiver()
                             startDownload()
+                            val intent = Intent(this, OpenAIActivity::class.java)
+                            intent.putExtra("仿單資料", extractedText)  // 傳遞仿單資料
+                            startActivity(intent)
                         }
                     } else {
                         Toast.makeText(this, "無法獲取藥品詳細資訊", Toast.LENGTH_SHORT).show()
@@ -103,6 +108,7 @@ class MedicineDetailActivity : AppCompatActivity()
         }
 
     }
+
 
         var pdf = "https://www.skh.org.tw/Pharmacy_img/202403120951121MLD01.pdf"
         var pdfFromUri = Uri.parse(pdf)   // 將 PDF 的 URL 轉換為 Uri 格式，方便後續處理
@@ -148,7 +154,10 @@ class MedicineDetailActivity : AppCompatActivity()
                     SOUT.Loge(TAG, "2. onDownLoadFinish 2: " + uri.toString())
 
                     var pdfFile = DownloadInfo.getFileFromUri(this@MedicineDetailActivity, uri)   // 將下載完成的 Uri 轉換為本地檔案
-                    var text = PDFUtility.getText(this@MedicineDetailActivity, pdfFile)         // 使用 PDFUtility 從檔案中提取文字內容
+                    var text = PDFUtility.getText(this@MedicineDetailActivity, pdfFile)
+
+                    // 儲存提取的文字到全域變數
+                    extractedText = text// 使用 PDFUtility 從檔案中提取文字內容
 
                 }
 
@@ -157,7 +166,10 @@ class MedicineDetailActivity : AppCompatActivity()
                     SOUT.Loge(TAG, "3. onError")
                 }
             })
+
+
         }
+
 
 }
 
