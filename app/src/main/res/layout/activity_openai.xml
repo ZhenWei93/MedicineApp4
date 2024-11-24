@@ -1,45 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp"
-    tools:context=".AIConversation">
+    android:padding="16dp">
 
-    <!-- TextView 用 ScrollView 包裹以支持滾動 -->
-    <ScrollView
+    <!-- TextView 用來顯示 AI 回應歷史 -->
+    <TextView
+        android:id="@+id/outputLabel"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="#EEEEEE">
-    <!-- TextView 用來顯示 AI 回應歷史 -->
-        <TextView
-            android:id="@+id/outputLabel"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="#EEEEEE"
-            android:padding="16dp"
-            android:scrollbars="vertical"
-            android:text="這裡會顯示對話歷史"
-            android:textColor="#333333"
-            android:textSize="16sp" />
-    </ScrollView>
+        android:background="#EEEEEE"
+        android:padding="16dp"
+        android:scrollbars="vertical"
+        android:text="這裡會顯示對話歷史"
+        android:textColor="#333333"
+        android:textSize="16sp" />
 
     <!-- EditText 用戶輸入區域 -->
     <EditText
         android:id="@+id/inputTextField"
-        android:layout_width="match_parent"
-        android:layout_height="71dp"
+        android:layout_width="385dp"
+        android:layout_height="51dp"
         android:hint="輸入您的問題..."
         android:padding="8dp"
         android:textSize="16sp" />
 
-    <!-- Button 觸發請求 -->
+    <!--Button 按鈕觸發請求-->
+
+<!--    <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--        xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--        xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent">-->
+
+        <!-- 第一個按鈕 -->
+    <Button
+        android:id="@+id/summaryButton"
+        android:layout_width="156dp"
+        android:layout_height="wrap_content"
+        android:text="統整"
+        />
+
+        <!-- 第二個按鈕 -->
     <Button
         android:id="@+id/responseButton"
-        android:layout_width="match_parent"
+        android:layout_width="163dp"
         android:layout_height="wrap_content"
-        android:text="提交" />
+        android:text="提交"
+        />
+
+<!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+
+
+
+
 </LinearLayout>
