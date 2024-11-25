@@ -155,10 +155,13 @@ import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import android.speech.tts.TextToSpeech
+import android.widget.Button
+import java.util.Locale
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 
-class MedicineDetailActivity : AppCompatActivity()
+class MedicineDetailActivity : AppCompatActivity(), TextToSpeech.OnInitListener
 {
     val TAG = MedicineDetailActivity::class.java.simpleName.toString()
     private lateinit var genericNameTextView: TextView
@@ -173,10 +176,21 @@ class MedicineDetailActivity : AppCompatActivity()
     private lateinit var pregnancyBreastFeedingChildNoticeTextView: TextView
     private lateinit var imageAPathImageView: ImageView
     private lateinit var imageBPathImageView: ImageView
+    private lateinit var tts: TextToSpeech
+    private lateinit var readButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_medicine_detail)
+
+        // 初始化 Text-to-Speech
+        tts = TextToSpeech(this, this)
+
+        // 初始化按鈕
+        readButton = findViewById(R.id.readButton)
+        readButton.setOnClickListener {
+            readMedicineDetails()
+        }
 
         // 初始化各個 TextView 和 ImageView
         genericNameTextView = findViewById(R.id.genericNameTextView)
@@ -192,9 +206,10 @@ class MedicineDetailActivity : AppCompatActivity()
         imageAPathImageView = findViewById(R.id.imageAPathImageView)
         imageBPathImageView = findViewById(R.id.imageBPathImageView)
 
+
         // 接收傳遞過來的 medicineCode
         val medicineCode = intent.getStringExtra("MEDICINE_CODE")
-Log.e(TAG, "medicineCode: $medicineCode")
+        Log.e(TAG, "medicineCode: $medicineCode")
         if (medicineCode != null) {
             // 使用 medicineCode 獲取藥品詳細資料
             ApiUtility.fetchMedicineDetails(this, medicineCode) { medicine ->
@@ -228,7 +243,48 @@ Log.e(TAG, "medicineCode: $medicineCode")
         } else {
             Toast.makeText(this, "藥品代碼無效", Toast.LENGTH_SHORT).show()
         }
+
+    }
+    // Text-to-Speech 初始化完成後回調
+    override fun onInit(status: Int) {
+        if (status == TextToSpeech.SUCCESS) {
+            val result = tts.setLanguage(Locale.TAIWAN)
+            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                Toast.makeText(this, "不支援的語言", Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            Toast.makeText(this, "Text-to-Speech 初始化失敗", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    // 清理資源
+    override fun onDestroy() {
+        if (::tts.isInitialized) {
+            tts.stop()
+            tts.shutdown()
+        }
+        super.onDestroy()
+    }
+    private fun readMedicineDetails() {
+        val details = """
+            學名: ${genericNameTextView.text}
+            中文藥名: ${chineseBrandNameTextView.text}
+            英文藥名: ${englishBrandNameTextView.text}
+            外觀: ${appearanceTextView.text}
+            用法: ${dosageTextView.text}
+            用途: ${purposeTextView.text}
+            儲存方式: ${storageMethodTextView.text}
+            副作用: ${sideEffectTextView.text}
+            注意事項: ${noticeTextView.text}
+            孕婦、哺乳期與兒童注意事項: ${pregnancyBreastFeedingChildNoticeTextView.text}
+        """.trimIndent()
+
+        if (tts.isSpeaking) {
+            tts.stop() // 如果已經在朗讀，先停止
+        }
+        tts.speak(details, TextToSpeech.QUEUE_FLUSH, null, null)
     }
 }
+
 
 

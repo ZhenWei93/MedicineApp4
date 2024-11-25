@@ -5,7 +5,7 @@ apply plugin: 'kotlin-parcelize'
 
 android {
     namespace 'edu.fju.medicineapp'
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         applicationId "edu.fju.medicineapp"
@@ -13,12 +13,18 @@ android {
         targetSdk 34
         versionCode 1
         versionName "1.0"
+        vectorDrawables.useSupportLibrary = true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
@@ -30,33 +36,53 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+    buildFeatures {
+        buildConfig = true // 確保這行設置為 true
+    }
 }
 
 dependencies {
 
-    implementation libs.androidx.core.ktx
-    implementation libs.androidx.appcompat
-    implementation libs.material
-    implementation libs.androidx.activity
-    implementation libs.androidx.constraintlayout
-    implementation 'com.google.code.gson:gson:2.8.9'
-    implementation libs.androidx.recyclerview
-    implementation 'androidx.recyclerview:recyclerview:1.2.1'
-    testImplementation libs.junit
-    androidTestImplementation libs.androidx.junit
-    androidTestImplementation libs.androidx.espresso.core
-    implementation 'com.google.code.gson:gson:2.8.9'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "androidx.multidex:multidex:2.0.1"
 
-    // glide
-    implementation 'com.github.bumptech.glide:glide:4.12.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:2.0.21'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.core:core-ktx:1.15.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.0'
+    implementation 'androidx.vectordrawable:vectordrawable:1.2.0'
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
+    implementation "androidx.media:media:1.7.0"
+    implementation 'androidx.transition:transition:1.5.1'
+    implementation 'com.google.android.material:material:1.12.0'
 
+    //Kotlin Json Serialization
+    runtimeOnly 'org.jetbrains.kotlinx:kotlinx-serialization-runtime:1.0-M1-1.4.0-rc'
+
+    // apache
+    implementation 'commons-codec:commons-codec:1.17.1'
+    implementation 'org.apache.commons:commons-lang3:3.17.0'
+
+    // Logging Network Calls
+    // define a BOM and its version
     implementation(platform('com.squareup.okhttp3:okhttp-bom:5.0.0-alpha.14'))
     // define any required OkHttp artifacts without version
     implementation("com.squareup.okhttp3:okhttp")
     implementation('com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.14')
     implementation('com.squareup.okhttp3:okhttp-urlconnection:5.0.0-alpha.14')
     implementation('com.squareup.okhttp3:okhttp-tls:5.0.0-alpha.14')
-    implementation 'com.google.code.gson:gson:2.8.9'
 
+    //pdf
+    implementation ('com.github.barteksc:pdfium-android:1.9.0')
+    implementation("com.tom-roush:pdfbox-android:2.0.27.0")
+
+    // glide
+    implementation 'com.github.bumptech.glide:glide:4.16.0'
+    kapt 'com.github.bumptech.glide:compiler:4.16.0'
+
+    implementation ("com.google.code.gson:gson:2.10")
+
+    /*-- AP --*/
+    testImplementation 'junit:junit:4.13.2'
 }
