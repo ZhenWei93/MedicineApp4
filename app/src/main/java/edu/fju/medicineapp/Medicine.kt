@@ -15,24 +15,10 @@ data class Medicine(
     val sideEffect: String,
     val notice: String,
     val pregnancyBreastFeedingChildNotice: String,
+    val packageInsertPath: String,
     val imageAPath: String,
     val imageBPath: String
 )
-
-//data class Medicines(
-//    val medicationCode: String,
-//    val genericName: String,
-//    val chineseBrandName: String,
-//    val englishBrandName: String,
-//    val medicationMark: String,
-//    val doseUnitCode: String,
-//    val doseUnitChineseName: String,
-//    val doseUnitEnglishName: String,
-//    val imageAPath: String,
-//    val imageBPath: String
-//)
-
-
 
 data class Medicines(
     val medicationCode: String, // 新增的欄位
