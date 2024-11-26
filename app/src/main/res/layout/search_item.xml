@@ -6,31 +6,93 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="16dp">
+    android:padding="10dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/genericNameTextView"
+        <!-- First item: Generic Name -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="學名: " />
+            android:orientation="horizontal"
+            android:paddingBottom="8dp">
 
-        <TextView
-            android:id="@+id/chineseBrandNameTextView"
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:text="學名:"
+                android:textColor="@android:color/black"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/genericNameTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:text="這是學名的內容" />
+        </LinearLayout>
+
+        <!-- Second item: Chinese Brand Name -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="中文藥名:" />
+            android:orientation="horizontal"
+            android:paddingBottom="8dp">
 
-        <TextView
-            android:id="@+id/englishBrandNameTextView"
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:text="中文藥名:"
+                android:textColor="@android:color/black"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/chineseBrandNameTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:text="這是中文藥名的內容" />
+        </LinearLayout>
+
+        <!-- Third item: English Brand Name -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="英文藥名: " />
+            android:orientation="horizontal"
+            android:paddingBottom="18dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:text="英文藥名:"
+                android:textColor="@android:color/black"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/englishBrandNameTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:text="這是英文藥名的內容" />
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray"
+            android:backgroundTint="@color/gray"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

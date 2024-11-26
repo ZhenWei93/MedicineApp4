@@ -7,15 +7,24 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.skh.storyteller.DefaultOnInfoListener
+import com.skh.storyteller.Storyteller
+import edu.fju.medicineapp.utility.SOUT
 
 
 class OpenAIActivity: AppCompatActivity(), AIConversationInterface
 {
+    companion object
+    {
+        val TAG = OpenAIActivity::class.java.simpleName.toString()
+        val key_extractedText = "key_extractedText"
+    }
     var aiConversation = AIConversation()
     lateinit var inputTextField: EditText
     lateinit var outputLabel: TextView
     lateinit var responseButton: Button
     lateinit var summaryButton: Button
+    lateinit var friendlyReadButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -26,21 +35,19 @@ class OpenAIActivity: AppCompatActivity(), AIConversationInterface
         outputLabel = findViewById<TextView>(R.id.outputLabel)
         responseButton = findViewById<Button>(R.id.responseButton)
         summaryButton = findViewById<Button>(R.id.summaryButton)
+        friendlyReadButton  = findViewById<Button>(R.id.friendlyReadButton)
 
-//        summaryButton.setOnClickListener {
-//            // 接下來的業務邏輯
-//            val extractedText = intent.getStringExtra("仿單資料") ?: "nono仿單資料"
-//
-//            aiConversation.getCompletion(extractedText, this, customPrompt = true) { summary ->
-//                // 在回调中更新 UI
-//                runOnUiThread {
-//                    outputLabel.text = summary
-//                }
-//            }
-//        }
+        var extractedText = intent.getStringExtra(key_extractedText) ?: "nono仿單資料"
+        if (extractedText.length > 2000)
+            extractedText = extractedText.substring(0, 2000)
 
+        SOUT.Loge(TAG, "extractedText:$extractedText")
 
-
+        summaryButton.setOnClickListener()
+        {
+            // 接下來的業務邏輯
+            aiConversation.getCompletion(extractedText, this)
+        }
 
 //        我現在頭暈反胃！
 //        我應該看哪一科的醫生？
@@ -56,6 +63,15 @@ class OpenAIActivity: AppCompatActivity(), AIConversationInterface
 
             inputTextField.setText("")
             closeKeyboard(this, inputTextField)
+        }
+
+        updateConversationLabel(outputLabel)
+
+        friendlyReadButton.setOnClickListener()
+        {
+            SOUT.Loge(TAG, "lastPackageInserSummary: $key_extractedText")
+            if (key_extractedText.isNotEmpty())
+                Storyteller.speak(this, key_extractedText, DefaultOnInfoListener(this))
         }
 
         updateConversationLabel(outputLabel)
