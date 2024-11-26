@@ -1,120 +1,312 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="16dp"
-        tools:layout_editor_absoluteX="209dp"
-        tools:layout_editor_absoluteY="-108dp">
-
-<!--        <EditText-->
-<!--            android:id="@+id/medicineCodeEditText"-->
-<!--            android:layout_width="1023dp"-->
-<!--            android:layout_height="74dp"-->
-<!--            android:hint="請輸入藥品代碼" />-->
-
-<!--        <Button-->
-<!--            android:id="@+id/fetchMedicineButton"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="確認搜尋" />-->
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="216dp"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-            <ImageView
-                android:id="@+id/imageAPathImageView"
-                android:layout_width="185dp"
-                android:layout_height="186dp" />
+            <!-- 图片部分 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_horizontal"
+                android:layout_marginBottom="16dp">
 
-            <ImageView
-                android:id="@+id/imageBPathImageView"
-                android:layout_width="197dp"
-                android:layout_height="186dp" />
+                <ImageView
+                    android:id="@+id/imageAPathImageView"
+                    android:layout_width="0dp"
+                    android:layout_height="186dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"/>
+
+                <ImageView
+                    android:id="@+id/imageBPathImageView"
+                    android:layout_width="0dp"
+                    android:layout_height="186dp"
+                    android:layout_weight="1"/>
+            </LinearLayout>
+
+            <!-- 标题和内容对 -->
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp">
+
+                <TextView
+                    android:id="@+id/genericNameTitleTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:text="學名: "
+                    android:textColor="#009688"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/genericNameTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3.5"
+                    android:text=""
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_weight="3.5"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/chineseBrandNameTitleTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:text="中文藥名: "
+                    android:textColor="#009688"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/chineseBrandNameTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3.5"
+                    android:text=""
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp">
+
+                <TextView
+                    android:id="@+id/englishBrandNameTitleTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:text="英文藥名: "
+                    android:textColor="#009688"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/englishBrandNameTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3.5"
+                    android:text=""
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp">
+
+                <TextView
+                    android:id="@+id/appearanceTitleTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:text="外觀: "
+                    android:textColor="#009688"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/appearanceTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3.5"
+                    android:text=""
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp">
+
+                <TextView
+                    android:id="@+id/dosageTitleTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:text="劑量: "
+                    android:textColor="#009688"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/dosageTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3.5"
+                    android:text=""
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp">
+
+                <TextView
+                    android:id="@+id/purposeTitleTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:text="主要功能: "
+                    android:textColor="#009688"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/purposeTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3.5"
+                    android:text=""
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp">
+
+                <TextView
+                    android:id="@+id/storageMethodTitleTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:text="保存方法: "
+                    android:textColor="#009688"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/storageMethodTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3.5"
+                    android:text=""
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp">
+
+                <TextView
+                    android:id="@+id/sideEffectTitleTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:text="常見副作用: "
+                    android:textColor="#009688"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/sideEffectTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3.5"
+                    android:text=""
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp">
+
+                <TextView
+                    android:id="@+id/noticeTitleTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:text="注意: "
+                    android:textColor="#009688"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/noticeTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3.5"
+                    android:text=""
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:id="@+id/pregnancyBreastFeedingChildNoticeTitleTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:text="孕婦、母乳哺育孩子須知: "
+                    android:textColor="#009688"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/pregnancyBreastFeedingChildNoticeTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3.5"
+                    android:text=""
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <!-- 按钮部分 -->
+            <Button
+                android:id="@+id/packageInsertPathButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="詳細藥品仿單" />
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/responseTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="提示藥品資訊是否查詢成功" />
-
-        <TextView
-            android:id="@+id/genericNameTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="學名: " />
-
-        <TextView
-            android:id="@+id/chineseBrandNameTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="中文藥名: " />
-
-        <TextView
-            android:id="@+id/englishBrandNameTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="英文藥名: " />
-
-        <TextView
-            android:id="@+id/appearanceTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="外觀: " />
-
-        <TextView
-            android:id="@+id/dosageTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="劑量: " />
-
-        <TextView
-            android:id="@+id/purposeTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="主要功能: " />
-
-        <TextView
-            android:id="@+id/storageMethodTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="保存方法: " />
-
-        <TextView
-            android:id="@+id/sideEffectTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="常見副作用: " />
-
-        <TextView
-            android:id="@+id/noticeTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="注意: " />
-
-        <TextView
-            android:id="@+id/pregnancyBreastFeedingChildNoticeTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="孕婦、母乳哺育孩子須知: " />
-
-        <Button
-            android:id="@+id/packageInsertPathButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="詳細藥品仿單" />
-
-
-    </LinearLayout>
-
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -20,6 +20,7 @@ import edu.fju.medicineapp.pdf.PDFDetector
 import edu.fju.medicineapp.pdf.PDFUtility
 import edu.fju.medicineapp.utility.EncryptUtility
 import edu.fju.medicineapp.utility.SOUT
+import org.bouncycastle.oer.its.etsi102941.Url
 
 
 class MedicineDetailActivity : AppCompatActivity()
@@ -92,10 +93,8 @@ class MedicineDetailActivity : AppCompatActivity()
                         // 設定仿單按鈕點擊事件
                         packageInsertPathButton.setOnClickListener {
                             registerReceiver()
-                            startDownload()
-                            val intent = Intent(this, OpenAIActivity::class.java)
-                            intent.putExtra("仿單資料", extractedText)  // 傳遞仿單資料
-                            startActivity(intent)
+                            startDownload(medicine.packageInsertPath)
+
                         }
                     } else {
                         Toast.makeText(this, "無法獲取藥品詳細資訊", Toast.LENGTH_SHORT).show()
@@ -109,9 +108,7 @@ class MedicineDetailActivity : AppCompatActivity()
 
     }
 
-
-        var pdf = "https://www.skh.org.tw/Pharmacy_img/202403120951121MLD01.pdf"
-        var pdfFromUri = Uri.parse(pdf)   // 將 PDF 的 URL 轉換為 Uri 格式，方便後續處理
+       var pdfFromUri: Uri? =null   // 將 PDF 的 URL 轉換為 Uri 格式，方便後續處理
 
         // 自定義一個函數，用來根據 PDF 的 URL 生成一個唯一的檔案名稱，並加上 ".pdf" 作為檔案後綴
         fun getCustomFileName(pdfUrl: String): String
@@ -120,8 +117,9 @@ class MedicineDetailActivity : AppCompatActivity()
         }
 
         // 啟動 PDF 下載的功能
-        fun startDownload()
+        fun startDownload(pdf: String)
         {
+            pdfFromUri = Uri.parse(pdf)
             pdfFromUri?.let()
             { pdfFromUri ->
 
@@ -158,6 +156,10 @@ class MedicineDetailActivity : AppCompatActivity()
 
                     // 儲存提取的文字到全域變數
                     extractedText = text// 使用 PDFUtility 從檔案中提取文字內容
+
+                    val intent = Intent(this@MedicineDetailActivity, OpenAIActivity::class.java)
+                    intent.putExtra(OpenAIActivity.key_extractedText, extractedText)  // 傳遞仿單資料
+                    startActivity(intent)
 
                 }
 

@@ -15,17 +15,28 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <EditText
-            android:id="@+id/medicineListEditText"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="101dp"
-            android:hint="輸入藥名" />
-
-        <Button
-            android:id="@+id/searchMedicineButton"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="搜尋" />
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/medicineListEditText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:hint="輸入藥名"
+                android:inputType="text"
+                android:singleLine="true"
+                android:layout_weight="1"/>
+
+            <Button
+                android:id="@+id/searchMedicineButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="搜尋" />
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/responseTextView"
