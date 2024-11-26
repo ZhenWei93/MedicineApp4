@@ -4,4 +4,5 @@
     <string name="pdf_downloading">下載中，請稍候。</string>
     <string name="download_complete">下載完成</string>
     <string name="your_file_has_been_downloaded">Your file has been downloaded successfully.</string>
+    <string name="storyteller_fail" translatable="false">語音轉文字失敗</string>
 </resources>
