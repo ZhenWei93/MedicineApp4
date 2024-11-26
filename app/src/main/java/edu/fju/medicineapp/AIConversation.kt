@@ -84,6 +84,13 @@ interface AIConversationInterface
 
 class AIConversation
 {
+
+    companion object
+    {
+        val TAG = AIConversation::class.java.simpleName.toString()
+        var key_extractedText = "以下是簡化後的藥品說明"
+    }
+
     val client = OkHttpClient()
     var aici: AIConversationInterface? = null
 
@@ -92,9 +99,21 @@ class AIConversation
     // 我們在這邊已經先編織一個 時空背景 叫做  "我是新光醫院的助手，如果需要掛號服務，請跟我說！"
     // 這樣之後對話 OpenAI 就會以為自己是這樣一個角色
     val conversationHistory = mutableListOf( mapOf("role" to "system",
-        "content" to "我是新光醫院的助手，如果需要掛號服務，請跟我說！"),
+        "content" to "我是新光醫院的助手，如果需要掛號服務，請跟我說！") ,
         mapOf("role" to "system",
-            "content" to "我是用藥資訊諮詢助手！"))
+            "content" to     "我是理解藥品資訊的專家，我擅長簡化仿單資訊，用最精簡的文字回傳內容，"),
+        mapOf("role" to "system",
+            "content" to     "而且我擅長面對老人家，不用太複雜的文字或學術用語，我會講很簡單，而且我會講到啟智兒都聽得懂，"),
+        mapOf("role" to "system",
+            "content" to     "成份含量部分應要更簡潔，不要太臭長。"),
+        mapOf("role" to "system",
+            "content" to     "每當我簡化完藥品資訊 我會用 ${key_extractedText} 做開頭，然後換行，然後才輸出我簡化的東西。"),
+        mapOf("role" to "system",
+            "content" to     "項目排列應有適當間隔。"),
+        mapOf("role" to "system",
+            "content" to     "簡化後的文字最多300字。"),
+        mapOf("role" to "assistant",
+            "content" to "我是理解藥品資訊的專家，我擅長簡化仿單資訊，提供淺顯易懂的資訊"))
 
     fun addHistory(newConversation: Map<String, String>): List<Map<String, String>>
     {
@@ -102,24 +121,14 @@ class AIConversation
         return conversationHistory
     }
 
-    fun getCompletion(
-        prompt: String,
-        aici: AIConversationInterface?,
-        customPrompt: Boolean = false,
-        callback: ((String) -> Unit)? = null
-    ) {
+    fun getCompletion(prompt: String, aici: AIConversationInterface?)
+    {
+        SOUT.Loge(TAG, "getCompletion: $prompt")
         this.aici = aici
-
-        // 構造 Prompt：摘要模式或一般模式
-        val prompt = if (customPrompt) {
-            "幫我將仿單資料統整成50字: $prompt"
-        } else {
-            prompt
-        }
 
         val requestBody = OpenAIBody(
             model = AIModel.model,
-            messages = addHistory(mapOf("role" to "user", "content" to prompt)), // role 為 user 指用戶輸入的訊息
+            messages = addHistory(mapOf("role" to "user", "content" to prompt)),          //  role 為 user 指用戶輸入的訊息。
             functions = AIModel.tools
         )
 
@@ -129,38 +138,46 @@ class AIConversation
             .post(RequestBody.create("application/json".toMediaTypeOrNull(), Gson().toJson(requestBody)))
             .build()
 
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                e.printStackTrace()
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                response.body?.string()?.let { responseBody ->
-                    val json = Gson().fromJson(responseBody, Map::class.java) as Map<*, *>
-                    handleApiResponse(json, callback)
+        client
+            .newCall(request)
+            .enqueue(object: Callback
+            {
+                override fun onFailure(call: Call, e: IOException)
+                {
+                    e.printStackTrace()
                 }
-            }
-        })
+
+                override fun onResponse(call: Call, response: Response)
+                {
+                    response.body?.string()?.let()
+                    { responseBody ->
+                        val json = Gson().fromJson(responseBody, Map::class.java) as Map<*, *>
+
+                        handleApiResponse(json)
+                    }
+                }
+            })
     }
 
-    private fun handleApiResponse(json: Map<*, *>, callback: ((String) -> Unit)?) {
+    private fun handleApiResponse(json: Map<*, *>)
+    {
         val choices = json["choices"] as? List<Map<*, *>>
         val message = choices?.firstOrNull()?.get("message") as? Map<*, *>
 
-        message?.let {
+        message?.let()
+        {
             val functionCall = it["function_call"] as? Map<*, *>
-            if (functionCall != null) {
+            if (functionCall != null)
+            {
                 handleFunctionCall(functionCall)
                 return
             }
 
             val content = it["content"] as? String
-            if (content != null) {
-                if (callback != null) {
-                    callback(content) // 使用回调传递结果
-                } else {
-                    handleContent(content) // 默认处理
-                }
+            if (content != null)
+            {
+                handleContent(content)
+                return
             }
         }
     }
@@ -191,8 +208,6 @@ class AIConversation
 
         aici?.handleContent(content)
     }
-
-
 }
 
 

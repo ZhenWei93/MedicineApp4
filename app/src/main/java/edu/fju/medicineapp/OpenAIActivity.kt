@@ -1,7 +1,14 @@
 package edu.fju.medicineapp
 
 import android.content.Context
+import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.SpannableStringBuilder
+import android.text.Spanned
+import android.text.style.ForegroundColorSpan
+import android.text.style.StyleSpan
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
@@ -10,6 +17,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.skh.storyteller.DefaultOnInfoListener
 import com.skh.storyteller.Storyteller
 import edu.fju.medicineapp.utility.SOUT
+import edu.fju.medicineapp.utility.UIUtility
+import edu.fju.medicineapp.utility.UIUtility.closeKeyboard
 
 
 class OpenAIActivity: AppCompatActivity(), AIConversationInterface
@@ -20,6 +29,8 @@ class OpenAIActivity: AppCompatActivity(), AIConversationInterface
         val key_extractedText = "key_extractedText"
     }
     var aiConversation = AIConversation()
+    var lastPackageInserSummary = ""
+
     lateinit var inputTextField: EditText
     lateinit var outputLabel: TextView
     lateinit var responseButton: Button
@@ -47,6 +58,9 @@ class OpenAIActivity: AppCompatActivity(), AIConversationInterface
         {
             // 接下來的業務邏輯
             aiConversation.getCompletion(extractedText, this)
+
+            inputTextField.setText("")
+            closeKeyboard(this, inputTextField)
         }
 
 //        我現在頭暈反胃！
@@ -65,17 +79,22 @@ class OpenAIActivity: AppCompatActivity(), AIConversationInterface
             closeKeyboard(this, inputTextField)
         }
 
-        updateConversationLabel(outputLabel)
-
         friendlyReadButton.setOnClickListener()
         {
-            SOUT.Loge(TAG, "lastPackageInserSummary: $key_extractedText")
-            if (key_extractedText.isNotEmpty())
-                Storyteller.speak(this, key_extractedText, DefaultOnInfoListener(this))
+            SOUT.Loge(TAG, "lastPackageInserSummary: $lastPackageInserSummary")
+            if (lastPackageInserSummary.isNotEmpty())
+                Storyteller.speak(this, lastPackageInserSummary, DefaultOnInfoListener(this))
         }
 
         updateConversationLabel(outputLabel)
     }
+
+    override fun onPause()
+    {
+        super.onPause()
+        Storyteller.shutdown()
+    }
+
 
 
     private fun queryAppointmentByDepartmentAndDate(departmentName: String, date: String): String
@@ -103,30 +122,45 @@ class OpenAIActivity: AppCompatActivity(), AIConversationInterface
         runOnUiThread()
         {
             updateConversationLabel(outputLabel)
+            checkPackageInserSummary(content)
         }
     }
 
     // 將格式化後的文字顯示在 UILabel 中
     private fun updateConversationLabel(outputLabel: TextView)
     {
-        val displayText = aiConversation.conversationHistory.joinToString("\n\n")
+        val spannableStringBuilder = SpannableStringBuilder()
+
+        aiConversation.conversationHistory.forEach()
         { message ->
             when (message["role"])
             {
-                "system" -> "系統說：${message["content"]}"
-                "user" -> "使用者說：${message["content"]}"
-                "assistant" -> "助手說：${message["content"]}"
-                else -> ""
+                //"system" -> "系統說：${message["content"]}"     //嘗試隱藏
+                "user" -> {
+                    // "使用者說" 设置为粗体和绿色
+                    val userText = SpannableString("使用者說：${message["content"]}\n\n")
+                    userText.setSpan(StyleSpan(Typeface.BOLD), 0, 5, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE) // 加粗 "使用者說"
+                    userText.setSpan(ForegroundColorSpan(Color.MAGENTA), 0, 5, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE) // 设置绿色
+                    spannableStringBuilder.append(userText)
+                }
+                "assistant" -> {
+                    // "助手說" 设置为粗体和蓝色
+                    val assistantText = SpannableString("助手說：${message["content"]}\n\n")
+                    assistantText.setSpan(StyleSpan(Typeface.BOLD), 0, 4, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE) // 加粗 "助手說"
+                    assistantText.setSpan(ForegroundColorSpan(Color.BLUE), 0, 4, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE) // 设置蓝色
+                    spannableStringBuilder.append(assistantText)
+                }
+                else -> {} // 如果是其他角色，則不顯示
             }
         }
-        outputLabel.text = displayText
+
+        outputLabel.text = spannableStringBuilder
     }
 
-    // 關閉鍵盤
-    fun closeKeyboard(context: Context, editText: EditText)
+    private fun checkPackageInserSummary(content: String)
     {
-        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(editText.windowToken, 0)
+        if (content.contains(key_extractedText))
+            lastPackageInserSummary = content.replace("助手說：", "")
     }
 
 }
