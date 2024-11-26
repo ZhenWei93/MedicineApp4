@@ -95,8 +95,6 @@ class OpenAIActivity: AppCompatActivity(), AIConversationInterface
         Storyteller.shutdown()
     }
 
-
-
     private fun queryAppointmentByDepartmentAndDate(departmentName: String, date: String): String
     { // 模擬查詢結果
         return "$departmentName 的醫生在 $date 有空位。"
@@ -159,8 +157,7 @@ class OpenAIActivity: AppCompatActivity(), AIConversationInterface
 
     private fun checkPackageInserSummary(content: String)
     {
-        if (content.contains(key_extractedText))
+        if (content.contains(AIConversation.prefix_main_content))
             lastPackageInserSummary = content.replace("助手說：", "")
     }
-
 }

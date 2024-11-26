@@ -88,7 +88,7 @@ class AIConversation
     companion object
     {
         val TAG = AIConversation::class.java.simpleName.toString()
-        var key_extractedText = "以下是簡化後的藥品說明"
+        var prefix_main_content = "以下是簡化後的藥品說明"
     }
 
     val client = OkHttpClient()
@@ -107,7 +107,7 @@ class AIConversation
         mapOf("role" to "system",
             "content" to     "成份含量部分應要更簡潔，不要太臭長。"),
         mapOf("role" to "system",
-            "content" to     "每當我簡化完藥品資訊 我會用 ${key_extractedText} 做開頭，然後換行，然後才輸出我簡化的東西。"),
+            "content" to     "每當我簡化完藥品資訊 我會用 ${prefix_main_content} 做開頭，然後換行，然後才輸出我簡化的東西。"),
         mapOf("role" to "system",
             "content" to     "項目排列應有適當間隔。"),
         mapOf("role" to "system",
