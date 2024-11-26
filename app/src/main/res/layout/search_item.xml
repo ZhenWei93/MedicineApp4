@@ -6,6 +6,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="#d5eeee"
     android:padding="10dp">
 
     <LinearLayout
@@ -27,7 +28,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
                 android:text="學名:"
-                android:textColor="@android:color/black"
+                android:textColor="#009688"
                 android:textStyle="bold" />
 
             <TextView
@@ -52,7 +53,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
                 android:text="中文藥名:"
-                android:textColor="@android:color/black"
+                android:textColor="#009688"
                 android:textStyle="bold" />
 
             <TextView
@@ -77,7 +78,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
                 android:text="英文藥名:"
-                android:textColor="@android:color/black"
+                android:textColor="#009688"
                 android:textStyle="bold" />
 
             <TextView
@@ -92,7 +93,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/gray"
-            android:backgroundTint="@color/gray"/>
+            android:backgroundTint="#B9B9B9"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

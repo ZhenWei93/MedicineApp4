@@ -6,6 +6,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#d5eeee"
     android:padding="16dp"
     tools:context=".SearchMedicineActivity">
 
@@ -22,12 +23,13 @@
 
             <EditText
                 android:id="@+id/medicineListEditText"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_width="273dp"
+                android:layout_height="69dp"
+                android:layout_weight="1"
                 android:hint="輸入藥名"
+                android:backgroundTint="#0c423f"
                 android:inputType="text"
-                android:singleLine="true"
-                android:layout_weight="1"/>
+                android:singleLine="true" />
 
             <Button
                 android:id="@+id/searchMedicineButton"
@@ -38,29 +40,29 @@
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/responseTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="提示藥品資訊是否查詢成功" />
+<!--        <TextView-->
+<!--            android:id="@+id/responseTextView"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="提示藥品資訊是否查詢成功" />-->
 
-        <TextView
-            android:id="@+id/genericNameTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="學名: " />
+<!--        <TextView-->
+<!--            android:id="@+id/genericNameTextView"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="學名: " />-->
 
-        <TextView
-            android:id="@+id/chineseBrandNameTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="中文藥名:" />
+<!--        <TextView-->
+<!--            android:id="@+id/chineseBrandNameTextView"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="中文藥名:" />-->
 
-        <TextView
-            android:id="@+id/englishBrandNameTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="英文藥名: " />
+<!--        <TextView-->
+<!--            android:id="@+id/englishBrandNameTextView"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="英文藥名: " />-->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
