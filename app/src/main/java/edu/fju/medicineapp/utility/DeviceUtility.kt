@@ -5,13 +5,6 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.provider.Settings
 
-/**
- * Description:
- *
- * Author: Shi_Kai_Lin
- *
- * Date: 2024/2/5
- */
 class DeviceUtility
 {
     companion object

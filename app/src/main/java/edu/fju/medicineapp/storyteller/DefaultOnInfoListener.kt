@@ -5,13 +5,6 @@ import android.widget.Toast
 import edu.fju.medicineapp.R
 import edu.fju.medicineapp.utility.SOUT
 
-/**
- * Description:
- *
- * Author: Shi_Kai_Lin
- *
- * Date: 2024/10/1
- */
 class DefaultOnInfoListener(val context: Context): Storyteller.OnInfoListener
 {
     private val TAG = DefaultOnInfoListener::class.java.simpleName.toString()

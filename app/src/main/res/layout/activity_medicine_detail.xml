@@ -307,7 +307,10 @@
                 android:id="@+id/packageInsertPathButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="詳細藥品仿單" />
+                android:text="藥品仿單智能助理藥品仿單智能助理"
+                android:textStyle="bold"
+                android:textSize="18dp"
+                android:textColor="#EFFFFF"/>
         </LinearLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

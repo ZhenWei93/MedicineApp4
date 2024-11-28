@@ -9,13 +9,6 @@ import edu.fju.medicineapp.utility.SOUT
 import java.io.File
 
 
-/**
- * Description:
- *
- * Author: Shi_Kai_Lin
- *
- * Date: 2024/11/14
- */
 object PDFUtility
 {
     val TAG = PDFUtility::class.java.simpleName.toString()

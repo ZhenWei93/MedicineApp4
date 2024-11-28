@@ -2,13 +2,6 @@ package edu.fju.medicineapp.utility
 
 import android.view.View
 
-/**
- * Description:
- *
- * Author: Shi_Kai_Lin
- *
- * Date: 2024/6/19
- */
 class NullUtility
 {
     companion object

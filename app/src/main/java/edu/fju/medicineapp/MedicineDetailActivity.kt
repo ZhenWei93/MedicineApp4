@@ -6,9 +6,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Button
 import android.widget.Toast
-import android.webkit.WebSettings
-import android.webkit.WebView
-import android.webkit.WebViewClient
 import com.bumptech.glide.Glide
 import android.content.Intent
 import android.net.Uri
@@ -20,7 +17,7 @@ import edu.fju.medicineapp.pdf.PDFDetector
 import edu.fju.medicineapp.pdf.PDFUtility
 import edu.fju.medicineapp.utility.EncryptUtility
 import edu.fju.medicineapp.utility.SOUT
-import org.bouncycastle.oer.its.etsi102941.Url
+
 
 
 class MedicineDetailActivity : AppCompatActivity()

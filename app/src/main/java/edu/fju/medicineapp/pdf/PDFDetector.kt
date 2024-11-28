@@ -1,13 +1,5 @@
 package edu.fju.medicineapp.pdf
 
-/**
- * Description:
- *
- * Author: Shi_Kai_Lin
- *
- * Date: 2024/2/6
- */
-
 import android.content.Context
 import edu.fju.medicineapp.utility.SOUT
 import kotlinx.coroutines.Dispatchers

@@ -7,14 +7,6 @@ import android.speech.tts.UtteranceProgressListener
 import edu.fju.medicineapp.utility.NullUtility
 import edu.fju.medicineapp.utility.SOUT
 
-/**
- * Description:
- *
- * Author: Shi_Kai_Lin
- *
- * Date: 2024/10/1
- */
-
 object Storyteller
 {
     var Error_OnInitFail        = -1

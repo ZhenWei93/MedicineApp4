@@ -7,9 +7,6 @@ import android.util.Base64
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 
-/**
- * Created by SKYLin on 2017/3/17.
- */
 object AppInfoUtility
 {
     private val TAG = AppInfoUtility::class.java.simpleName

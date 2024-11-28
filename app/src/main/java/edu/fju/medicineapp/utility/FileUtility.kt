@@ -7,13 +7,6 @@ import android.text.TextUtils
 import androidx.core.content.FileProvider
 import java.io.File
 
-/**
- * Description:
- *
- * Author: Shi_Kai_Lin
- *
- * Date: 2024/5/30
- */
 class FileUtility
 {
     companion object

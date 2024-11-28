@@ -5,13 +5,6 @@ import android.util.Log
 import android.widget.Toast
 import edu.fju.medicineapp.BuildConfig
 
-/**
- * Description:
- *
- * Author: Shi_Kai_Lin
- *
- * Date: 2023/11/6
- */
 object SOUT
 {
     fun Loge(TAG: String, message: String)

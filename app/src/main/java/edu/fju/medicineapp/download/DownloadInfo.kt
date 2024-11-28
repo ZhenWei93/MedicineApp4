@@ -16,13 +16,6 @@ import edu.fju.medicineapp.utility.SOUT
 import java.io.File
 import java.net.URLEncoder
 
-/**
- * Description:
- *
- * Author: Shi_Kai_Lin
- *
- * Date: 2024/2/14
- */
 class DownloadInfo
 {
     companion object

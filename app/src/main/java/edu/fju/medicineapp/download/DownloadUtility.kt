@@ -18,13 +18,6 @@ import edu.fju.medicineapp.utility.DeviceUtility
 import edu.fju.medicineapp.utility.SOUT
 import java.io.File
 
-/**
- * Description:
- *
- * Author: Shi_Kai_Lin
- *
- * Date: 2024/2/1
- */
 class DownloadUtility
 {
 //==================================================================================================

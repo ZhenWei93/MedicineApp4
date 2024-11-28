@@ -49,7 +49,7 @@
         android:layout_height="wrap_content"
         android:backgroundTint="#20b2aa"
         android:text="提交"
-        android:textColor="#DEFFFF"
+        android:textColor="#EFFFFF"
         android:textSize="20sp"
         android:textStyle="bold" />
 
@@ -70,7 +70,7 @@
             android:layout_height="wrap_content"
             android:backgroundTint="#96e2e2"
             android:text="統整"
-            android:textColor="#20b2aa"
+            android:textColor="#1FA39D"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -80,7 +80,7 @@
             android:layout_height="wrap_content"
             android:backgroundTint="#96e2e2"
             android:text="友善朗讀"
-            android:textColor="#20b2aa"
+            android:textColor="#1FA39D"
             android:textSize="20sp"
             android:textStyle="bold" />
     </LinearLayout>
