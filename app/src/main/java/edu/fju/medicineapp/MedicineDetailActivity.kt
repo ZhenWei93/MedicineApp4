@@ -67,16 +67,16 @@ class MedicineDetailActivity : AppCompatActivity()
                 runOnUiThread {
                     if (medicine != null) {
                         // 顯示藥品詳細資訊
-                        genericNameTextView.text = "學名: ${medicine.genericName}"
-                        chineseBrandNameTextView.text = "中文藥名: ${medicine.chineseBrandName}"
-                        englishBrandNameTextView.text = "英文藥名: ${medicine.englishBrandName}"
-                        appearanceTextView.text = "外觀: ${medicine.appearance}"
-                        dosageTextView.text = "用法: ${medicine.dosage}"
-                        purposeTextView.text = "用途: ${medicine.purpose}"
-                        storageMethodTextView.text = "儲存方式: ${medicine.storageMethod}"
-                        sideEffectTextView.text = "副作用: ${medicine.sideEffect}"
-                        noticeTextView.text = "注意事項: ${medicine.notice}"
-                        pregnancyBreastFeedingChildNoticeTextView.text = "孕婦/哺乳期/兒童注意: ${medicine.pregnancyBreastFeedingChildNotice}"
+                        genericNameTextView.text = "${medicine.genericName}"
+                        chineseBrandNameTextView.text = "${medicine.chineseBrandName}"
+                        englishBrandNameTextView.text = "${medicine.englishBrandName}"
+                        appearanceTextView.text = "${medicine.appearance}"
+                        dosageTextView.text = "${medicine.dosage}"
+                        purposeTextView.text = "${medicine.purpose}"
+                        storageMethodTextView.text = "${medicine.storageMethod}"
+                        sideEffectTextView.text = "${medicine.sideEffect}"
+                        noticeTextView.text = "${medicine.notice}"
+                        pregnancyBreastFeedingChildNoticeTextView.text = "${medicine.pregnancyBreastFeedingChildNotice}"
 
                         // 顯示圖片
                         Glide.with(this)
