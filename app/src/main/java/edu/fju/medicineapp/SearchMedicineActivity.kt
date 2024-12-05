@@ -9,17 +9,21 @@ import android.widget.TextView;
 import android.widget.Toast
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import edu.fju.medicineapp.utility.UIUtility
 
-class SearchMedicineActivity : AppCompatActivity() {
+class SearchMedicineActivity: AppCompatActivity()
+{
     private lateinit var medicineListEditText: EditText
     private lateinit var searchMedicineButton: Button
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: MedicineAdapter
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
@@ -32,40 +36,64 @@ class SearchMedicineActivity : AppCompatActivity() {
         adapter = MedicineAdapter(listOf())
         recyclerView.adapter = adapter
 
+        medicineListEditText.setOnEditorActionListener()
+        { v, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_DONE)
+            {
+                UIUtility.closeKeyboard(this, v)
+                true  // 返回 true，表示事件已处理
+            }
+            else
+            {
+                false  // 返回 false，表示其他事件可以继续处理
+            }
+        }
+
         // 設置搜索按鈕的點擊事件
-        searchMedicineButton.setOnClickListener {
+        searchMedicineButton.setOnClickListener()
+        {
+            UIUtility.closeKeyboard(this, medicineListEditText)
+
             val medicineName = medicineListEditText.text.toString()
-            if (medicineName.isNotEmpty()) {
+            if (medicineName.isNotEmpty())
+            {
                 // 調用 ApiUtility獲取藥品列表
                 ApiUtility.searchMedicineLists(this, medicineName) { medicines ->
                     runOnUiThread {
-                        if (medicines != null && medicines.isNotEmpty()) {
+                        if (medicines != null && medicines.isNotEmpty())
+                        {
                             // 更新 RecyclerView 顯示藥品列表
                             adapter.updateData(medicines)
-                        } else {
+                        }
+                        else
+                        {
                             Toast.makeText(this, "未找到相關藥品訊息", Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
-            } else {
+            }
+            else
+            {
                 Toast.makeText(this, "請输入藥品名稱", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
     // 内部類 MedicineAdapter，用於 RecyclerView 顯示藥品列表
-    inner class MedicineAdapter(private var medicineList: List<Medicines>) : RecyclerView.Adapter<MedicineAdapter.MedicineViewHolder>() {
-
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MedicineViewHolder {
+    inner class MedicineAdapter(private var medicineList: List<Medicines>): RecyclerView.Adapter<MedicineAdapter.MedicineViewHolder>()
+    {
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MedicineViewHolder
+        {
             val view = LayoutInflater.from(parent.context).inflate(R.layout.search_item, parent, false)
             return MedicineViewHolder(view)
         }
 
-        override fun onBindViewHolder(holder: MedicineViewHolder, position: Int) {
+        override fun onBindViewHolder(holder: MedicineViewHolder, position: Int)
+        {
             val medicine = medicineList[position]
-            holder.genericNameTextView.text = "學名: ${medicine.genericName}"
-            holder.chineseBrandNameTextView.text = "中文藥名: ${medicine.chineseBrandName}"
-            holder.englishBrandNameTextView.text = "英文藥名: ${medicine.englishBrandName.take(50)}"
+            holder.genericNameTextView.text = medicine.genericName
+            holder.chineseBrandNameTextView.text = medicine.chineseBrandName
+            holder.englishBrandNameTextView.text = medicine.englishBrandName.take(50)
 
             // 設置點擊事件，當點選某個藥品時跳轉到詳細頁面
             holder.itemView.setOnClickListener {
@@ -78,13 +106,15 @@ class SearchMedicineActivity : AppCompatActivity() {
         override fun getItemCount(): Int = medicineList.size
 
         // 更新數據並刷新列表
-        fun updateData(newData: List<Medicines>) {
+        fun updateData(newData: List<Medicines>)
+        {
             medicineList = newData
             notifyDataSetChanged()
         }
 
         // ViewHolder 定義
-        inner class MedicineViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        inner class MedicineViewHolder(itemView: View): RecyclerView.ViewHolder(itemView)
+        {
             val genericNameTextView: TextView = itemView.findViewById(R.id.genericNameTextView)
             val chineseBrandNameTextView: TextView = itemView.findViewById(R.id.chineseBrandNameTextView)
             val englishBrandNameTextView: TextView = itemView.findViewById(R.id.englishBrandNameTextView)
