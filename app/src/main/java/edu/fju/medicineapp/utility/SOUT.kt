@@ -61,19 +61,4 @@ object SOUT
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
-//    fun Loge(TAG: String, prefix: String, messageList: List<String>?)
-//    {
-//        if (!BuildConfig.DEBUG)
-//            return
-//
-//        var message = "$prefix "
-//
-//        messageList?.let()
-//        { messageList->
-//            for (element in messageList)
-//                message = "$message$element, "
-//        }
-//
-//        Log.e(TAG, message)
-//    }
 }

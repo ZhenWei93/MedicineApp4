@@ -307,9 +307,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="藥品仿單智能助理"
-                android:textColor="#EFFFFF"
+                android:textStyle="bold"
                 android:textSize="18dp"
-                android:textStyle="bold" />
+                android:textColor="#EFFFFF"/>
         </LinearLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
