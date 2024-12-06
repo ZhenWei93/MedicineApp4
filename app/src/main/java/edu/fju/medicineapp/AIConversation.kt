@@ -231,7 +231,7 @@ object AIModel
     // 模型設定
     val model = "gpt-3.5-turbo"
 
-    val key = "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"
+    val key = ""
 
     // OpenAI API
     val urlString = "https://api.openai.com/v1/chat/completions"
