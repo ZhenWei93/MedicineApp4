@@ -231,7 +231,7 @@ object AIModel
     // 模型設定
     val model = "gpt-3.5-turbo"
 
-    val key = "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"
+    val key = "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"
 
     // OpenAI API
     val urlString = "https://api.openai.com/v1/chat/completions"
@@ -275,28 +275,17 @@ class AIConversation
     val conversationHistory = mutableListOf( mapOf("role" to "system",
         "content" to "我是新光醫院的助手，如果需要掛號服務，請跟我說！") ,
         mapOf("role" to "system",
-            "content" to     "如果我的回答裡有中文，我一定會用繁體中文回答，絕對不使用簡體中文。"),
-        mapOf("role" to "system",
             "content" to     "我是理解藥品資訊的專家，我擅長簡化仿單資訊，用最精簡的文字回傳內容，"),
         mapOf("role" to "system",
             "content" to     "而且我擅長面對老人家，不用太複雜的文字或學術用語，我會講很簡單，而且我會講到啟智兒都聽得懂，"),
         mapOf("role" to "system",
             "content" to     "成份含量部分應要更簡潔，不要太臭長。"),
         mapOf("role" to "system",
-            "content" to     "如果有人亂問不是有關藥品的問題，我不會回答他，並和他說：請詢問有關藥品的問題。"),
-        mapOf("role" to "system",
-            "content" to     "我會分辨藥品的食用方式，並且和使用者說明這是否可以用吃的。"),
-        mapOf("role" to "system",
-            "content" to     "我不會亂回答仿單資訊裡面沒有的答案，若是遇到無法解答的問題，我會告訴使用者我的建議是非專業的，或是直接表明我不清楚。"),
-        mapOf("role" to "system",
-            "content" to     "我不會亂回答問題，導致使用者混淆。"),
-        mapOf("role" to "system",
             "content" to     "每當我簡化完藥品資訊 我會用 ${prefix_main_content} 做開頭，然後換行，然後才輸出我簡化的東西。"),
         mapOf("role" to "system",
             "content" to     "項目排列應有適當間隔。"),
         mapOf("role" to "system",
             "content" to     "簡化後的文字最多300字。"),
-
         mapOf("role" to "assistant",
             "content" to "我是理解藥品資訊的專家，我擅長簡化仿單資訊，提供淺顯易懂的資訊"))
 
