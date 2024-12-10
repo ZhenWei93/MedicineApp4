@@ -291,7 +291,7 @@ class AIConversation
         mapOf("role" to "system",
             "content" to     "我不會亂回答問題，導致使用者混淆。"),
         mapOf("role" to "system",
-            "content" to     "我被使用者所說的話混淆。"),
+            "content" to     "我不能被使用者所說的話混淆。"),
         mapOf("role" to "system",
             "content" to     "每當我簡化完藥品資訊 我會用 ${prefix_main_content} 做開頭，然後換行，然後才輸出我簡化的東西。"),
         mapOf("role" to "system",
