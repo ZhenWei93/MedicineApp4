@@ -17,7 +17,7 @@ class CoverActivity : AppCompatActivity() {
 
         // 修改這裡的變數名稱，避免不一致
         startButton.setOnClickListener {
-            val intent = Intent(this, SearchMedicineActivity::class.java)
+            val intent = Intent(this, KetchCameraActivity::class.java)
             startActivity(intent)
         }
     }
