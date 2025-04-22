@@ -45,7 +45,7 @@
                 android:text="拍照" />
 
             <Button
-                android:id="@+id/cameraButton3"
+                android:id="@+id/reTakeButton"
                 android:layout_width="187dp"
                 android:layout_height="wrap_content"
                 android:text="重拍" />

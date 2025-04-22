@@ -58,9 +58,24 @@ class MedicineDetailActivity : AppCompatActivity()
         imageAPathImageView = findViewById(R.id.imageAPathImageView)
         imageBPathImageView = findViewById(R.id.imageBPathImageView)
 
+        //取得藥品影像辨識資料開始
+        // 初始化 TextView
+        val chineseBrandNameTextView: TextView = findViewById(R.id.medicineNameTextView)
+//        val similarityTextView: TextView = findViewById(R.id.similarityTextView)
+
+        // 從 Intent 獲取資料
+        val chineseBrandName = intent.getStringExtra("chineseBrandName") ?: "未知"
+//        val similarity = intent.getDoubleExtra("similarity", 0.0)
+
+        // 設置資料
+        chineseBrandNameTextView.text = "藥品名稱：$chineseBrandName"
+//        similarityTextView.text = "相似度：${String.format("%.2f%%", similarity * 100)}"
+        //取得藥品影像辨識資料結束
+
         // 接收傳遞過來的 medicineCode
         val medicineCode = intent.getStringExtra("MEDICINE_CODE")
         Log.e(TAG, "medicineCode: $medicineCode")
+
         if (medicineCode != null) {
             // 使用 medicineCode 獲取藥品詳細資料
             ApiUtility.fetchMedicineDetails(this, medicineCode) { medicine ->
@@ -168,6 +183,8 @@ class MedicineDetailActivity : AppCompatActivity()
 
 
         }
+
+
 
 
 }
