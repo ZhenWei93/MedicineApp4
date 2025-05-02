@@ -204,12 +204,14 @@ class OpenAIActivity: AppCompatActivity(), AIConversationInterface
     }
     var aiConversation = AIConversation()
     var lastPackageInserSummary = ""
+    private var lastSummaryResult = SpannableStringBuilder()
 
     lateinit var inputTextField: EditText
     lateinit var outputLabel: TextView
     lateinit var responseButton: Button
     lateinit var summaryButton: Button
     lateinit var friendlyReadButton: Button
+    lateinit var UserInformation: TextView
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -221,6 +223,30 @@ class OpenAIActivity: AppCompatActivity(), AIConversationInterface
         responseButton = findViewById<Button>(R.id.responseButton)
         summaryButton = findViewById<Button>(R.id.summaryButton)
         friendlyReadButton  = findViewById<Button>(R.id.friendlyReadButton)
+        UserInformation = findViewById<EditText>(R.id.UserInformation)
+
+        // 硬編碼測試用戶資料
+        val id = "H234567898"
+        val username = "我好老"
+        val age = 66
+        val identity = "elderly"
+        val identityDisplay = "年長者"
+
+//        // 使用 PreferencesManager 獲取身份資料
+//        val id = PreferencesManager.getUserId(this)
+//        val username = PreferencesManager.getUsername(this)
+//        val age = PreferencesManager.getAge(this)
+//        val identity = PreferencesManager.getIdentity(this)
+//        val identityDisplay = when (identity) {
+//            "baby" -> "幼兒"
+//            "child" -> "孩童"
+//            "teenager" -> "青少年"
+//            "elderly" -> "年長者"
+//            "pregnant" -> "孕婦"
+//            else -> "一般成人"
+//        }
+        // 顯示用戶資訊
+        UserInformation.text = "用戶：$username (ID: $id, 年齡: $age, 身分: $identityDisplay)"
 
         var extractedText = intent.getStringExtra(key_extractedText) ?: "沒有仿單資料"
         if (extractedText.length > 2000)
@@ -231,7 +257,71 @@ class OpenAIActivity: AppCompatActivity(), AIConversationInterface
         summaryButton.setOnClickListener()
         {
             // 接下來的業務邏輯
-            aiConversation.getCompletion(extractedText, this)
+            aiConversation.getCompletion(
+                prompt = extractedText,
+                age = age,
+                identity = identity,
+                isSummary = true,
+                aici = this,
+                callback = { result ->
+                    runOnUiThread {
+                        // 解析回應，分割一般成人資訊和特定身分資訊
+                        val spannableStringBuilder = SpannableStringBuilder()
+                        val generalMarker = "${AIConversation.prefix_main_content}（一般成人）"
+                        val specificMarker = when (identity) {
+                            "baby" -> "幼兒（0-3歲）注意事項："
+                            "child" -> "孩童（4-12歲）注意事項："
+                            "teenager" -> "青少年（13-18歲）注意事項："
+                            "elderly" -> "年長者（65歲以上）注意事項："
+                            "pregnant" -> "孕婦注意事項："
+                            else -> ""
+                        }
+
+                        // 添加標題
+                        val titleText = SpannableString("簡化結果：\n")
+                        titleText.setSpan(StyleSpan(Typeface.BOLD), 0, titleText.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                        spannableStringBuilder.append(titleText)
+
+                        // 提取一般成人資訊
+                        val generalStart = result.indexOf(generalMarker)
+                        val generalEnd = if (specificMarker.isNotEmpty()) result.indexOf(specificMarker) else result.length
+                        val generalText = if (generalStart != -1 && generalEnd != -1 && generalEnd > generalStart) {
+                            result.substring(generalStart, generalEnd).trim()
+                        } else {
+                            result // 若無特定身分，顯示全部
+                        }
+                        val generalSpannable = SpannableString(generalText + "\n\n")
+                        // 若有特定身分資訊，一般成人資訊設為灰色
+                        if (specificMarker.isNotEmpty() && generalEnd != -1 && generalEnd < result.length) {
+                            generalSpannable.setSpan(
+                                ForegroundColorSpan(Color.parseColor("#808080")),
+                                0,
+                                generalText.length,
+                                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                            )
+                        }
+                        spannableStringBuilder.append(generalSpannable)
+
+                        // 提取特定身分資訊（若存在）
+                        if (specificMarker.isNotEmpty() && generalEnd != -1 && generalEnd < result.length) {
+                            val specificText = result.substring(generalEnd).trim()
+                            val specificSpannable = SpannableString(specificText + "\n")
+                            // 特定身分資訊設為黑色（默認色，無需顯式設置）
+                            spannableStringBuilder.append(specificSpannable)
+                        }
+
+                        // 儲存簡化結果
+                        lastSummaryResult = spannableStringBuilder
+                        // 儲存完整內容供語音播放
+                        lastPackageInserSummary = result
+                        summaryButton.isEnabled = true
+                        SOUT.Loge(TAG, "Simplified result: $lastPackageInserSummary")
+
+                        // 更新 UI
+                        outputLabel.text = spannableStringBuilder
+                    }
+                }
+            )
 
             inputTextField.setText("")
             closeKeyboard(this, inputTextField)
@@ -240,9 +330,21 @@ class OpenAIActivity: AppCompatActivity(), AIConversationInterface
         responseButton.setOnClickListener()
         {
             val prompt = inputTextField.text.toString()
-            if (prompt.isNotEmpty())
-            {
-                aiConversation.getCompletion(prompt, this)
+            if (prompt.isNotEmpty()) {
+                // 對話模式：不使用結構化提示詞
+                aiConversation.getCompletion(
+                    prompt = prompt,
+                    age = age,
+                    identity = identity,
+                    isSummary = false,
+                    aici = this,
+                    callback = { result ->
+                        runOnUiThread {
+                            // 更新對話紀錄
+                            updateConversationLabel(outputLabel)
+                        }
+                    }
+                )
             }
 
             inputTextField.setText("")
@@ -299,26 +401,30 @@ class OpenAIActivity: AppCompatActivity(), AIConversationInterface
     {
         val spannableStringBuilder = SpannableStringBuilder()
 
-        aiConversation.conversationHistory.forEach()
-        { message ->
-            when (message["role"])
-            {
-                //"system" -> "系統說：${message["content"]}"     //嘗試隱藏
+        // 添加簡化結果（若存在）
+        if (lastSummaryResult.isNotEmpty()) {
+            spannableStringBuilder.append(lastSummaryResult)
+            spannableStringBuilder.append("\n----\n\n")
+        }
+        // 添加對話紀錄（僅顯示 response 類型的用戶訊息）
+        aiConversation.conversationHistory.forEach { message ->
+            when (message["role"]) {
                 "user" -> {
-                    // "使用者說" 设置为粗体和绿色
-                    val userText = SpannableString("使用者說：${message["content"]}\n\n")
-                    userText.setSpan(StyleSpan(Typeface.BOLD), 0, 5, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE) // 加粗 "使用者說"
-                    userText.setSpan(ForegroundColorSpan(Color.MAGENTA), 0, 5, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE) // 设置绿色
-                    spannableStringBuilder.append(userText)
+                    // 僅顯示 type 為 response 的用戶訊息
+                    if (message["type"] == "response") {
+                        val userText = SpannableString("使用者說：${message["content"]}\n\n")
+                        userText.setSpan(StyleSpan(Typeface.BOLD), 0, 5, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                        userText.setSpan(ForegroundColorSpan(Color.GREEN), 0, 5, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                        spannableStringBuilder.append(userText)
+                    }
                 }
                 "assistant" -> {
-                    // "助手說" 设置为粗体和蓝色
-                    val assistantText = SpannableString("助手說：${message["content"]}\n\n")
-                    assistantText.setSpan(StyleSpan(Typeface.BOLD), 0, 4, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE) // 加粗 "助手說"
-                    assistantText.setSpan(ForegroundColorSpan(Color.BLUE), 0, 4, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE) // 设置蓝色
-                    spannableStringBuilder.append(assistantText)
+                    // 顯示與 response 類型相關的助手回應
+                    if (message["type"] == "response") {
+                        val assistantText = SpannableString("${message["content"]}\n\n")
+                        spannableStringBuilder.append(assistantText)
+                    }
                 }
-                else -> {} // 如果是其他角色，則不顯示
             }
         }
 

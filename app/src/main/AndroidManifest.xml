@@ -45,11 +45,6 @@
             android:exported="true" />
 
         <activity
-            android:name=".MainActivity"
-            android:exported="true">
-        </activity>
-
-        <activity
             android:name=".SearchMedicineActivity"
             android:exported="true">
         </activity>
@@ -68,6 +63,14 @@
         </provider>
         <activity
             android:name=".KetchCameraActivity"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".data.RegisterActivity"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".data.LoginActivity"
             android:exported="true">
         </activity>
 

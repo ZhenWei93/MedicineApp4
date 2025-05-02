@@ -39,6 +39,7 @@ android {
 
     buildFeatures {
         buildConfig = true // 確保這行設置為 true
+        viewBinding = true
     }
 }
 
@@ -84,7 +85,7 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.16.0'
     kapt 'com.github.bumptech.glide:compiler:4.16.0'
 
-    implementation ("com.google.code.gson:gson:2.10")
+    implementation ("com.google.code.gson:gson:2.10.1")
 
     implementation libs.androidx.core.ktx
     implementation libs.androidx.appcompat
@@ -109,4 +110,6 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
 }

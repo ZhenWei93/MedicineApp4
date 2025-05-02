@@ -76,14 +76,32 @@ class DownloadInfo
                 SOUT.Loge(TAG, "3. findCacheRootDirChildFile: $crf")
 
                 SOUT.Loge(TAG, "=== read Test file ===")
-                orf?.let {var sl = File(it.path).readLines(); if (sl.isNotEmpty()) SOUT.Loge(TAG, "1. findOpenRootDirChildFile:  ${sl.get(0)}")}
-                frf?.let {var sl = File(it.path).readLines(); if (sl.isNotEmpty()) SOUT.Loge(TAG, "2. findFilesRootDirChildFile: ${sl.get(0)}")}
-                crf?.let {var sl = File(it.path).readLines(); if (sl.isNotEmpty()) SOUT.Loge(TAG, "3. findCacheRootDirChildFile: ${sl.get(0)}")}
+                orf?.let {var sl = File(it.path).readLines(); if (sl.isNotEmpty()) SOUT.Loge(
+                    TAG,
+                    "1. findOpenRootDirChildFile:  ${sl.get(0)}"
+                )}
+                frf?.let {var sl = File(it.path).readLines(); if (sl.isNotEmpty()) SOUT.Loge(
+                    TAG,
+                    "2. findFilesRootDirChildFile: ${sl.get(0)}"
+                )}
+                crf?.let {var sl = File(it.path).readLines(); if (sl.isNotEmpty()) SOUT.Loge(
+                    TAG,
+                    "3. findCacheRootDirChildFile: ${sl.get(0)}"
+                )}
 
                 SOUT.Loge(TAG, "=== FileProvider support ===")
-                NullUtility.let2Safe(authority, orf){ authority, uri -> SOUT.Loge(TAG, "1. FileProvider: ${FileProvider.getUriForFile(context, authority, File(uri.path))}")}
-                NullUtility.let2Safe(authority, frf){ authority, uri -> SOUT.Loge(TAG, "2. FileProvider: ${FileProvider.getUriForFile(context, authority, File(uri.path))}")}
-                NullUtility.let2Safe(authority, crf){ authority, uri -> SOUT.Loge(TAG, "3. FileProvider: ${FileProvider.getUriForFile(context, authority, File(uri.path))}")}
+                NullUtility.let2Safe(authority, orf){ authority, uri -> SOUT.Loge(
+                    TAG,
+                    "1. FileProvider: ${FileProvider.getUriForFile(context, authority, File(uri.path))}"
+                )}
+                NullUtility.let2Safe(authority, frf){ authority, uri -> SOUT.Loge(
+                    TAG,
+                    "2. FileProvider: ${FileProvider.getUriForFile(context, authority, File(uri.path))}"
+                )}
+                NullUtility.let2Safe(authority, crf){ authority, uri -> SOUT.Loge(
+                    TAG,
+                    "3. FileProvider: ${FileProvider.getUriForFile(context, authority, File(uri.path))}"
+                )}
             }
             catch (e: Exception)
             {

@@ -4,11 +4,13 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.Button
+import edu.fju.medicineapp.data.RegisterActivity
 
 class CoverActivity : AppCompatActivity() {
 
     private lateinit var startButton: Button
     private lateinit var EnterCameraButton: Button
+    private lateinit var RegisterButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -16,6 +18,7 @@ class CoverActivity : AppCompatActivity() {
 
         startButton = findViewById(R.id.startButton)
         EnterCameraButton = findViewById(R.id.EnterCameraButton)
+        RegisterButton = findViewById(R.id.RegisterButton)
 
         // 修改這裡的變數名稱，避免不一致
         startButton.setOnClickListener {
@@ -26,7 +29,11 @@ class CoverActivity : AppCompatActivity() {
         EnterCameraButton.setOnClickListener {
             val intent = Intent(this, KetchCameraActivity::class.java)
             startActivity(intent)
-            finish() // 如果 CoverActivity 是啟動畫面，應在跳轉後結束
+        }
+
+        RegisterButton.setOnClickListener {
+            val intent = Intent(this, RegisterActivity::class.java)
+            startActivity(intent)
         }
     }
 }

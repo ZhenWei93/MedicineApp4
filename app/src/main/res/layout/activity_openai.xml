@@ -8,6 +8,13 @@
     android:orientation="vertical"
     android:padding="16dp">
 
+    <TextView
+        android:id="@+id/UserInformation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="使用者身分 : "
+        android:textSize="16sp"/>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
