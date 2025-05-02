@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="註冊"
+        android:textSize="24sp"
+        android:layout_marginBottom="16dp" />
+
+    <EditText
+        android:id="@+id/editTextIdNumber"
+        android:layout_width="378dp"
+        android:layout_height="58dp"
+        android:hint="身份證字號"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/editTextName"
+        android:layout_width="378dp"
+        android:layout_height="58dp"
+        android:layout_marginTop="8dp"
+        android:hint="姓名"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/editTextAge"
+        android:layout_width="376dp"
+        android:layout_height="61dp"
+        android:layout_marginTop="8dp"
+        android:hint="年齡"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/editTextPassword"
+        android:layout_width="380dp"
+        android:layout_height="64dp"
+        android:layout_marginTop="8dp"
+        android:hint="密碼"
+        android:inputType="textPassword" />
+
+    <TextView
+        android:layout_width="70dp"
+        android:layout_height="43dp"
+        android:layout_marginTop="16dp"
+        android:text="身分"
+        android:textSize="16sp" />
+
+    <Spinner
+        android:id="@+id/spinnerIdentity"
+        android:layout_width="378dp"
+        android:layout_height="58dp"
+        android:layout_marginTop="8dp" />
+
+    <Button
+        android:id="@+id/buttonRegister"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="提交"
+        android:layout_marginTop="16dp" />
+
+    <TextView
+        android:id="@+id/textViewResult"
+        android:layout_width="381dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="16dp" />
+
+</LinearLayout>
