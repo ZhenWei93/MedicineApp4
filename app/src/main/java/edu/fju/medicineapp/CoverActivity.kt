@@ -10,7 +10,8 @@ class CoverActivity : AppCompatActivity() {
 
     private lateinit var startButton: Button
     private lateinit var EnterCameraButton: Button
-    private lateinit var RegisterButton: Button
+//    private lateinit var RegisterButton: Button
+    private lateinit var ProfileButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,7 +19,8 @@ class CoverActivity : AppCompatActivity() {
 
         startButton = findViewById(R.id.startButton)
         EnterCameraButton = findViewById(R.id.EnterCameraButton)
-        RegisterButton = findViewById(R.id.RegisterButton)
+//        RegisterButton = findViewById(R.id.RegisterButton)
+        ProfileButton = findViewById(R.id.ProfileButton)
 
         // 修改這裡的變數名稱，避免不一致
         startButton.setOnClickListener {
@@ -31,8 +33,13 @@ class CoverActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        RegisterButton.setOnClickListener {
-            val intent = Intent(this, RegisterActivity::class.java)
+//        RegisterButton.setOnClickListener {
+//            val intent = Intent(this, RegisterActivity::class.java)
+//            startActivity(intent)
+//        }
+
+        ProfileButton.setOnClickListener {
+            val intent = Intent(this, ProfilePageActivity::class.java)
             startActivity(intent)
         }
     }

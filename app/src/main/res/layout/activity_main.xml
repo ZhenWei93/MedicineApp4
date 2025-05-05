@@ -17,29 +17,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.71"
-        app:srcCompat="@drawable/cover" />
-
-    <!--    <Button-->
-<!--        android:id="@+id/RegisterButton"-->
-<!--        android:layout_width="176dp"-->
-<!--        android:layout_height="74dp"-->
-<!--        android:scaleType="centerCrop"-->
-<!--        android:text="開始註冊"-->
-<!--        android:textSize="22sp"-->
-<!--        android:textStyle="bold"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.497"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        app:layout_constraintVertical_bias="0.778" />-->
+        app:srcCompat="@drawable/main" />
 
     <Button
-        android:id="@+id/startButton"
+        android:id="@+id/btn_login"
         android:layout_width="176dp"
         android:layout_height="74dp"
         android:scaleType="centerCrop"
-        android:text="文字搜尋"
+        android:text="登入"
         android:textSize="22sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -49,12 +34,14 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.499" />
 
+
+
     <Button
-        android:id="@+id/EnterCameraButton"
+        android:id="@+id/RegisterButton"
         android:layout_width="176dp"
         android:layout_height="74dp"
         android:scaleType="centerCrop"
-        android:text="拍照查詢"
+        android:text="註冊"
         android:textSize="22sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -65,11 +52,11 @@
         app:layout_constraintVertical_bias="0.668" />
 
     <Button
-        android:id="@+id/ProfileButton"
+        android:id="@+id/DirectButton"
         android:layout_width="176dp"
         android:layout_height="74dp"
         android:scaleType="centerCrop"
-        android:text="個人頁面"
+        android:text="直接使用"
         android:textSize="22sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"

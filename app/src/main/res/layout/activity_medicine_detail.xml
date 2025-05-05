@@ -36,7 +36,7 @@
 <!--                android:textSize="16sp"-->
 <!--                android:paddingBottom="16dp" />-->
 
-            <!-- 图片部分 -->
+            <!-- 圖片部分 -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

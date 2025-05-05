@@ -15,25 +15,6 @@ object PreferencesManager {
         return context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
     }
 
-    // 儲存用戶資料
-    fun saveUserData(
-        context: Context,
-        id: String,
-        username: String,
-        age: Int,
-        identity: String,
-        token: String? = null
-    ) {
-        getPreferences(context).edit()
-            .putString(KEY_ID, id)
-            .putString(KEY_USERNAME, username)
-            .putInt(KEY_AGE, age)
-            .putString(KEY_IDENTITY, identity)
-            .apply {
-                if (token != null) putString(KEY_TOKEN, token)
-            }
-            .apply()
-    }
 
     // 獲取用戶資料
     fun getUserId(context: Context): String = getPreferences(context).getString(KEY_ID, "N/A") ?: "N/A"
@@ -42,8 +23,43 @@ object PreferencesManager {
     fun getIdentity(context: Context): String = getPreferences(context).getString(KEY_IDENTITY, "general") ?: "general"
     fun getToken(context: Context): String? = getPreferences(context).getString(KEY_TOKEN, null)
 
+    // 儲存用戶資料
+    fun saveUserData(context: Context, id: String, username: String, age: Int, identity: String) {
+        val prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        with(prefs.edit()) {
+            putString(KEY_ID, id)
+            putString(KEY_USERNAME, username)
+            putInt(KEY_AGE, age)
+            putString(KEY_IDENTITY, identity)
+            apply()
+        }
+    }
+//    fun saveUserData(
+//        context: Context,
+//        id: String,
+//        username: String,
+//        age: Int,
+//        identity: String,
+//        token: String? = null
+//    ) {
+//        getPreferences(context).edit()
+//            .putString(KEY_ID, id)
+//            .putString(KEY_USERNAME, username)
+//            .putInt(KEY_AGE, age)
+//            .putString(KEY_IDENTITY, identity)
+//            .apply {
+//                if (token != null) putString(KEY_TOKEN, token)
+//            }
+//            .apply()
+//    }
+
+
     // 清除所有資料（例如登出）
     fun clearUserData(context: Context) {
-        getPreferences(context).edit().clear().apply()
+        val prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        with(prefs.edit()) {
+            clear()
+            apply()
+        }
     }
 }
