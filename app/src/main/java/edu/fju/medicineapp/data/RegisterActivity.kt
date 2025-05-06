@@ -34,7 +34,7 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         // 配置 Spinner
-        val identityOptions = listOf("幼兒:(1-3歲)","兒童(4-12歲)","青少年(13-18歲)","一般成人(19-64歲)", "孕婦","年長者(65-150歲)")
+        val identityOptions = listOf("幼兒(1-3歲)","兒童(4-12歲)","青少年(13-18歲)","一般成人(19-64歲)", "孕婦","年長者(65-150歲)")
         val adapter = ArrayAdapter(this, R.layout.simple_spinner_item, identityOptions)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.spinnerIdentity.adapter = adapter
