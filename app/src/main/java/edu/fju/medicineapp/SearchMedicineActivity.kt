@@ -5,19 +5,25 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView;
+import android.widget.TextView
 import android.widget.Toast
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import edu.fju.medicineapp.data.PreferencesManager
+import edu.fju.medicineapp.data.api.ApiClient
+import edu.fju.medicineapp.utility.UIUtility
+import kotlinx.coroutines.launch
 
 class SearchMedicineActivity : AppCompatActivity() {
     private lateinit var medicineListEditText: EditText
     private lateinit var searchMedicineButton: Button
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: MedicineAdapter
+    private val apiClient = ApiClient()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +43,10 @@ class SearchMedicineActivity : AppCompatActivity() {
             val medicineName = medicineListEditText.text.toString()
             if (medicineName.isNotEmpty()) {
                 // 調用 ApiUtility獲取藥品列表
-                ApiUtility.searchMedicineLists(this, medicineName) { medicines ->
+                ApiUtility.searchMedicineLists(this, medicineName)
+                {
+                    medicines ->
+                    UIUtility.closeKeyboard(this@SearchMedicineActivity, searchMedicineButton)
                     runOnUiThread {
                         if (medicines != null && medicines.isNotEmpty()) {
                             // 更新 RecyclerView 顯示藥品列表
@@ -63,15 +72,29 @@ class SearchMedicineActivity : AppCompatActivity() {
 
         override fun onBindViewHolder(holder: MedicineViewHolder, position: Int) {
             val medicine = medicineList[position]
-            holder.genericNameTextView.text = "學名: ${medicine.genericName}"
-            holder.chineseBrandNameTextView.text = "中文藥名: ${medicine.chineseBrandName}"
-            holder.englishBrandNameTextView.text = "英文藥名: ${medicine.englishBrandName.take(50)}"
+            holder.genericNameTextView.text = "${medicine.genericName}"
+            holder.chineseBrandNameTextView.text = "${medicine.chineseBrandName}"
+            holder.englishBrandNameTextView.text = "${medicine.englishBrandName.take(50)}"
 
-            // 設置點擊事件，當點選某個藥品時跳轉到詳細頁面
+            // 設置點擊事件，儲存歷史並跳轉到詳細頁面
             holder.itemView.setOnClickListener {
-                val intent = Intent(holder.itemView.context, MedicineDetailActivity::class.java)
-                intent.putExtra("MEDICINE_CODE", medicine.medicationCode) // 傳遞選中的藥品的 medicineCode
-                holder.itemView.context.startActivity(intent)
+                val userId = PreferencesManager.getUserId(holder.itemView.context)
+                if (userId != "N/A") {
+                    lifecycleScope.launch {
+                        val result = apiClient.addSearchHistory(userId, medicine.chineseBrandName)
+                        result.onSuccess {
+                            Toast.makeText(holder.itemView.context, "已儲存搜尋歷史", Toast.LENGTH_SHORT).show()
+                            // 跳轉到詳細頁面
+                            val intent = Intent(holder.itemView.context, MedicineDetailActivity::class.java)
+                            intent.putExtra("MEDICINE_CODE", medicine.medicationCode)
+                            holder.itemView.context.startActivity(intent)
+                        }.onFailure { exception ->
+                            Toast.makeText(holder.itemView.context, "儲存歷史失敗：${exception.message}", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                } else {
+                    Toast.makeText(holder.itemView.context, "請先登入", Toast.LENGTH_SHORT).show()
+                }
             }
         }
 
@@ -91,8 +114,3 @@ class SearchMedicineActivity : AppCompatActivity() {
         }
     }
 }
-
-
-
-
-

@@ -29,14 +29,6 @@
         android:inputType="text" />
 
     <EditText
-        android:id="@+id/editTextAge"
-        android:layout_width="376dp"
-        android:layout_height="61dp"
-        android:layout_marginTop="8dp"
-        android:hint="年齡"
-        android:inputType="number" />
-
-    <EditText
         android:id="@+id/editTextPassword"
         android:layout_width="380dp"
         android:layout_height="64dp"

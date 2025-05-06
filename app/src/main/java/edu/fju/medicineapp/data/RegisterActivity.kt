@@ -34,7 +34,7 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         // 配置 Spinner
-        val identityOptions = listOf("幼兒(1-3歲)","兒童(4-12歲)","青少年(13-18歲)","一般成人(19-64歲)", "孕婦","年長者(65-150歲)")
+        val identityOptions = listOf("幼兒(1-3歲)", "兒童(4-12歲)", "青少年(13-18歲)", "一般成人(19-64歲)", "孕婦", "年長者(65-150歲)")
         val adapter = ArrayAdapter(this, R.layout.simple_spinner_item, identityOptions)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.spinnerIdentity.adapter = adapter
@@ -44,44 +44,43 @@ class RegisterActivity : AppCompatActivity() {
         binding.buttonRegister.setOnClickListener {
             val id = binding.editTextIdNumber.text.toString().trim()
             val username = binding.editTextName.text.toString().trim()
-            val ageText = binding.editTextAge.text.toString().trim()
             val password = binding.editTextPassword.text.toString().trim()
             val selectedIdentity = binding.spinnerIdentity.selectedItem.toString()
 
-            if (id.isEmpty() || username.isEmpty() || ageText.isEmpty()) {
+            // 驗證必填欄位
+            if (id.isEmpty() || username.isEmpty() || password.isEmpty()) {
                 binding.textViewResult.text = "請填寫所有欄位"
                 return@setOnClickListener
             }
+
+            // 驗證身份證字號格式
             if (!id.matches(Regex("[A-Z][0-9]{9}"))) {
                 binding.textViewResult.text = "身份證字號格式錯誤"
                 return@setOnClickListener
             }
-            val age = ageText.toIntOrNull()
-            if (age == null || age < 0 || age > 120) {
-                binding.textViewResult.text = "年齡無效"
-                return@setOnClickListener
-            }
+
+            // 驗證密碼長度
             if (password.length < 6) {
                 binding.textViewResult.text = "密碼需至少6位"
                 return@setOnClickListener
             }
 
-            // 判斷身分：年長者優先，否則依據 Spinner
-            val identity = when {
-                age >= 65 -> "elderly"
-                selectedIdentity == "孕婦" -> "pregnant"
-                selectedIdentity == "幼兒" -> "baby"
-                selectedIdentity == "孩童" -> "child"
-                selectedIdentity == "青少年" -> "teenager"
+            // 根據 Spinner 選擇映射身分
+            val identity = when (selectedIdentity) {
+                "孕婦" -> "pregnant"
+                "幼兒(1-3歲)" -> "baby"
+                "兒童(4-12歲)" -> "child"
+                "青少年(13-18歲)" -> "teenager"
+                "年長者(65-150歲)" -> "elderly"
                 else -> "general"
             }
             Log.d(TAG, "Determined identity: $identity")
 
-            val user = User(id = id, username = username, age = age, password = password, identity = identity)
+            val user = User(id = id, username = username, password = password, identity = identity)
             registerUser(user)
         }
+    }
 
-        }
     private fun registerUser(user: User) {
         lifecycleScope.launch {
             binding.buttonRegister.isEnabled = false
@@ -96,7 +95,6 @@ class RegisterActivity : AppCompatActivity() {
                         context = this@RegisterActivity,
                         id = user.id,
                         username = user.username,
-                        age = user.age,
                         identity = user.identity
                     )
                     // 跳轉到登入頁面

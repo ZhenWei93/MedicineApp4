@@ -88,7 +88,6 @@ class LoginActivity : AppCompatActivity() {
                         context = this@LoginActivity,
                         id = loginResponse.id,
                         username = loginResponse.username,
-                        age = loginResponse.age,
                         identity = loginResponse.identity,
 //                        token = loginResponse.token
                     )
@@ -96,7 +95,6 @@ class LoginActivity : AppCompatActivity() {
                     val intent = Intent(this@LoginActivity, CoverActivity::class.java).apply {
                         putExtra("id", loginResponse.id)
                         putExtra("username", loginResponse.username)
-                        putExtra("age", loginResponse.age)
                         putExtra("identity", loginResponse.identity)
                         // 不傳遞 password，提升安全性
                     }
