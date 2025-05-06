@@ -1,207 +1,5 @@
-//package edu.fju.medicineapp
-//
-//import android.content.Context
-//import android.os.Bundle
-//import android.view.View
-//import android.view.inputmethod.InputMethodManager
-//import android.widget.Button
-//import android.widget.EditText
-//import android.widget.TextView
-//import androidx.appcompat.app.AppCompatActivity
-//import com.google.gson.Gson
-//import edu.fju.medicineapp.utility.SOUT
-//import kotlinx.coroutines.CoroutineScope
-//import kotlinx.coroutines.Dispatchers
-//import kotlinx.coroutines.launch
-//import kotlinx.coroutines.withContext
-//import okhttp3.*
-//import okhttp3.MediaType.Companion.toMediaTypeOrNull
-//import java.io.IOException
-//
-//// =================================================================================================
-//// Tool 定義
-//// =================================================================================================
-//data class ToolParameterProperty(
-//    val type: String,
-//    val description: String,
-//)
-//
-//data class ToolParameters(
-//    val type: String = "object",
-//    val properties: Map<String, ToolParameterProperty>,
-//    val required: List<String>,
-//)
-//
-//data class Tool(
-//    val name: String,                   //  工具的名稱。這是唯一標識工具的關鍵字，用來讓模型調用該工具。每個工具應該有一個唯一的名稱。
-//    val description: String,            //  工具的描述，解釋該工具的功能和用途。這有助於模型理解在何種情況下應該使用這個工具，並且能夠提供精確的結果。
-//    val parameters: ToolParameters,     //  定義工具所需的參數。
-//)
-//
-//// =================================================================================================
-//// OpenAI API
-//// =================================================================================================
-//object AIModel
-//{
-//    // 模型設定
-//    val model = "gpt-3.5-turbo"
-//
-//    /*
-//     1. 前往 OpenAI 官方網站 註冊一個帳號。
-//     2. 登入後，進入設定中的「API Keys」管理頁面，點擊「Create new secret key」以生成一組 API Key。
-//     3.目前採用資訊長提供的
-//    */
-//    val key = "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"
-//
-//    // OpenAI API
-//    val urlString = "https://api.openai.com/v1/chat/completions"
-//
-//    //  Tool 是用來描述應用程式可以執行的API，讓模型知道有哪些 API 可以調用 以及 調用這些 API 需要哪些參數。
-//    //  這些工具允許模型在回應用戶問題時，根據需求自動決定是否呼叫工具。
-//    val tools = listOf(
-//                        Tool(
-//                            name = "queryAppointmentByDepartmentAndDate",
-//                            description = "Query available appointments by department and date.",
-//                            parameters = ToolParameters(
-//                                properties = mapOf("department_name"   to ToolParameterProperty(type = "string", description = "Name of the department"),
-//                                                   "date"              to ToolParameterProperty(type = "string", description = "Appointment date in YYYY-MM-DD format")),
-//                                required = listOf("department_name", "date")))
-//                      )
-//}
-//
-//data class OpenAIBody(
-//    val model: String,
-//    val messages: List<Map<String, String>>,        //  role : content, role：用來說明該訊息是來自於誰, content ：每條訊息的實際內容
-//    val temperature: Double = 0.0,                  //  模型輸出的隨機性
-//    val functions: List<Tool>,                      //  Tools 是一個包含函數描述的陣列
-//)
-//
-//interface AIConversationInterface
-//{
-//    fun handleFunctionCall(arguments: Map<*, *>): String
-//    fun handleContent(content: String)
-//}
-//
-//object AIConversation
-//{
-//    val client = OkHttpClient()
-//    var aici: AIConversationInterface? = null
-//
-//    //  把整個對話歷程提供給模型，模型才能夠參考前後文
-//    //  role 為 system 指設定對話的背景或規則。
-//    // 我們在這邊已經先編織一個 時空背景 叫做  "我是新光醫院的助手，如果需要掛號服務，請跟我說！"
-//    // 這樣之後對話 OpenAI 就會以為自己是這樣一個角色
-//    val conversationHistory = mutableListOf( mapOf("role" to "system",
-//        "content" to "我是新光醫院的助手，如果需要掛號服務，請跟我說！"),
-//        mapOf("role" to "system",
-//            "content" to "我是用藥資訊諮詢助手！"))
-//
-//    fun addHistory(newConversation: Map<String, String>): List<Map<String, String>>
-//    {
-//        conversationHistory.add(newConversation)
-//        return conversationHistory
-//    }
-//
-//    fun getCompletion(
-//        prompt: String,
-//        aici: AIConversationInterface?,
-//        customPrompt: Boolean = false,
-//        callback: ((String) -> Unit)
-//    ) {
-//        this.aici = aici
-//
-//        // 構造 Prompt：摘要模式或一般模式
-//        val fullPrompt = if (customPrompt) {
-//            "幫我將仿單資料統整成50字: $prompt"
-//        } else {
-//            prompt
-//        }
-//
-//        val requestBody = OpenAIBody(
-//            model = AIModel.model,
-//            messages = addHistory(mapOf("role" to "user", "content" to fullPrompt)), // role 為 user 指用戶輸入的訊息
-//            functions = AIModel.tools
-//        )
-//
-//        val request = Request.Builder()
-//            .url(AIModel.urlString)
-//            .addHeader("Authorization", "Bearer ${AIModel.key}")
-//            .post(RequestBody.create("application/json".toMediaTypeOrNull(), Gson().toJson(requestBody)))
-//            .build()
-//
-//        client.newCall(request).enqueue(object : Callback {
-//            override fun onFailure(call: Call, e: IOException) {
-//                e.printStackTrace()
-//                callback("Error: ${e.message}") // 使用回調返回錯誤訊息
-//            }
-//
-//            override fun onResponse(call: Call, response: Response) {
-//                response.body?.string()?.let { responseBody ->
-//                    val json = Gson().fromJson(responseBody, Map::class.java) as Map<*, *>
-//                    handleApiResponse(json, callback)
-//                }?: callback("No response body")
-//            }
-//        })
-//    }
-//
-//    private fun handleApiResponse(json: Map<*, *>, callback: ((String) -> Unit)?) {
-//        val choices = json["choices"] as? List<Map<*, *>>
-//        val message = choices?.firstOrNull()?.get("message") as? Map<*, *>
-//
-//        message?.let {
-////            val functionCall = it["function_call"] as? Map<*, *>
-////            if (functionCall != null) {
-////                handleFunctionCall(functionCall)
-////                return
-////            }
-//
-//            val content = it["content"] as? String
-//            if (content != null) {
-////                if (callback != null) {
-////                    callback(content) // 使用回调传递结果
-////                } else {
-////                    handleContent(content) // 默认处理
-////                }
-//                callback?.invoke(content)
-//            }
-//        }
-//    }
-//
-//    private fun handleFunctionCall(functionCall: Map<*, *>?)
-//    {
-//        if (functionCall == null)
-//            return
-//
-//        val arguments = Gson().fromJson(functionCall["arguments"].toString(), Map::class.java) as Map<*, *>
-//
-//        var result = aici?.handleFunctionCall(arguments) ?: ""
-//
-//        if (result.isNotEmpty())
-//        {
-//            addHistory(mapOf("role" to "assistant", "content" to result))
-//
-//            aici?.handleContent(result)
-//        }
-//    }
-//
-//    private fun handleContent(content: String?)
-//    {
-//        if (content == null)
-//            return
-//
-//        addHistory(mapOf("role" to "assistant", "content" to content))
-//
-//        aici?.handleContent(content)
-//    }
-//
-//
-//}
-//
-//
-
 package edu.fju.medicineapp
 
-import android.util.Log
 import com.google.gson.Gson
 import edu.fju.medicineapp.utility.SOUT
 import okhttp3.*
@@ -301,48 +99,9 @@ class AIConversation
         mapOf("role" to "assistant",
             "content" to "我是理解藥品資訊的專家，我擅長簡化仿單資訊，提供淺顯易懂的資訊"))
 
-    fun addHistory(newConversation: Map<String, String>, type: String? = null): List<Map<String, String>>
+    fun getCharacterRule(identity:String):String
     {
-        val conversation = newConversation.toMutableMap()
-        if (type != null) {
-            conversation["type"] = type
-        }
-        conversationHistory.add(newConversation)
-        return conversationHistory
-    }
-
-    fun getCompletion(
-        prompt: String,
-        age: Int,
-        identity: String, // 新增身分參數
-        isSummary: Boolean = false,
-        aici: AIConversationInterface?,
-        callback: (String) -> Unit,
-        )
-    {
-        SOUT.Loge(TAG, "getCompletion: prompt=$prompt, age=$age, identity=$identity, isSummary=$isSummary")
-        this.aici = aici
-
-        // 構造 Prompt，根據身分調整
-        val userType = when (identity) {
-            "baby" -> "幼兒（0-3歲）"
-            "child" -> "孩童（4-12歲）"
-            "teenager" -> "青少年（13-18歲）"
-            "elderly" -> "年長者（65歲以上）"
-            "pregnant" -> "孕婦"
-            else -> "一般成人"
-        }
-        val safetyNote = when (identity) {
-            "baby" -> "特別注意幼兒的精確劑量，避免過量，強調常見副作用如過敏或消化不適，確保說明簡單。"
-            "child" -> "特別注意孩童的劑量調整，確保說明淺顯易懂，強調可能影響生長的副作用。"
-            "teenager" -> "特別注意青少年需遵醫囑用藥，強調避免藥物濫用，突出常見副作用如頭暈或嗜睡。"
-            "elderly" -> "特別注意年長者可能出現的副作用，如胃腸不適、暈眩等。"
-            "pregnant" -> "特別注意孕婦的用藥安全，強調胎兒風險和禁用藥物。"
-            else -> "列出一般副作用，確保資訊簡單易懂。"
-        }
-
-        // 單一 fullPrompt，生成結構化回應
-        val fullPrompt = if (isSummary) {
+        val fullPrompt = {
             // 藥品簡化模式：使用結構化提示詞
             val userType = when (identity) {
                 "baby" -> "幼兒（0-3歲）"
@@ -360,44 +119,62 @@ class AIConversation
                 "pregnant" -> "特別注意孕婦的用藥安全，強調胎兒風險和禁用藥物。"
                 else -> "列出一般副作用，確保資訊簡單易懂。"
             }
-            """
-            簡化以下藥品仿單資訊，總長度不超過300字，確保簡單易懂，適合老人或啟智兒：
-            $prompt
 
-            請按以下結構回傳：
-            1. 一般成人（年齡 30 歲）的簡化資訊，包含用途、使用方法、副作用，標記為「${prefix_main_content}（一般成人）」，副作用需簡單列出，格式如下：
-               ${prefix_main_content}（一般成人）
-               
-               藥品：<名稱>
-               用途：<用途>
-               使用：<使用方法>
-               副作用：<副作用>
-               
-            2. 若身分為 $userType（年齡 $age 歲），且非一般成人，則額外提供特定身分的注意事項，僅列出與一般成人不同的副作用或注意事項，標記為「${userType}注意事項：」，$safetyNote，格式如下：
-               ${userType}注意事項：
-               <特定副作用或注意事項>
-               
-            若身分為一般成人，則僅回傳第一部分，無第二部分。
-            """.trimIndent()
-        } else {
-            // 對話模式：直接使用 prompt，並添加身分上下文
+            var contentDetail = when (userType)
+            {
+                "一般成人" ->
+                    """
+                我是針對一般成人（年齡 30 歲）的簡化資訊，
+                會包含用途、使用方法、副作用，並標記為「${prefix_main_content}（${userType}）」，且副作用會簡單列出，格式如下：
+                ${prefix_main_content}（${userType}）
+                藥品：<名稱>
+                用途：<用途>
+                使用：<使用方法>
+                副作用：<副作用>                      
+                """.trimIndent()
+
+                else ->
+                    """
+                我是針對 幼兒（0-3歲）,孩童（4-12歲）,青少年（13-18歲）, 年長者（65歲以上）,孕婦 非一般成人，
+                會包含用途、使用方法、副作用，並標記為「${prefix_main_content}（${userType}）」，且副作用會簡單列出，格式如下：
+                ${prefix_main_content}（${userType}）
+                [colorFormatTagStart]藥品：<名稱>[colorFormatTagEnd]
+                [colorFormatTagStart]用途：<用途>[colorFormatTagEnd]
+                [colorFormatTagStart]使用：<使用方法>[colorFormatTagEnd]
+                [colorFormatTagStart]副作用：<副作用> [colorFormatTagEnd]
+                更重要的是額外提供特定身分的注意事項，
+                僅列出與一般成人不同的副作用或注意事項，標記為「${userType}注意事項：」，${safetyNote}格式如下：
+               ${userType}注意事項：<特定副作用或注意事項>
+                """.trimIndent()
+            }
+
             """
-            使用者的年齡為 $age 歲，身分為 $identity。請根據之前的對話紀錄，回答以下問題，確保回應簡單易懂，適合該身分：
-            $prompt
+            當我簡化仿單資訊，總長度不超過300字，確保簡單易懂，適合老人或啟智兒：
+            我現在會針對${userType} 身份來回答。
+            根據身份的不同，會以以下規則來回傳：
+            ${contentDetail}
             """.trimIndent()
         }
 
-        // 儲存顯示用的用戶訊息（原始 prompt）
-        addHistory(mapOf("role" to "user", "content" to prompt), type = if (isSummary) "summary" else "response")
+        return fullPrompt()
+    }
+
+    fun addHistory(newConversation: Map<String, String>): List<Map<String, String>>
+    {
+        conversationHistory.add(newConversation)
+        return conversationHistory
+    }
+
+    fun getCompletion(prompt: String, aici: AIConversationInterface?)
+    {
+        SOUT.Loge(TAG, "getCompletion: $prompt")
+        this.aici = aici
 
         val requestBody = OpenAIBody(
             model = AIModel.model,
-            messages = addHistory(mapOf("role" to "user", "content" to fullPrompt)),          //  role 為 user 指用戶輸入的訊息。
+            messages = addHistory(mapOf("role" to "user", "content" to prompt)),          //  role 為 user 指用戶輸入的訊息。
             functions = AIModel.tools
         )
-
-        val jsonBody = Gson().toJson(requestBody)
-        Log.d(TAG, "Sending OpenAI request: $jsonBody")
 
         val request = Request.Builder()
             .url(AIModel.urlString)
@@ -409,69 +186,60 @@ class AIConversation
             .newCall(request)
             .enqueue(object: Callback
             {
-                override fun onFailure(call: Call, e: IOException){
-                    Log.e(TAG, "OpenAI API error: ${e.message}", e)
-                    val errorMessage = "錯誤：無法連接到 OpenAI API，請檢查網路"
-                    addHistory(mapOf("role" to "assistant", "content" to errorMessage), type = if (isSummary) "summary" else "response")
-                    callback(errorMessage)
-            }
+                override fun onFailure(call: Call, e: IOException)
+                {
+                    e.printStackTrace()
+                }
 
-                override fun onResponse(call: Call, response: Response) {
-                    response.body?.string()?.let { responseBody ->
-                        Log.d(TAG, "Received OpenAI response: $responseBody")
-                        try {
-                            val json = Gson().fromJson(responseBody, Map::class.java) as Map<*, *>
-                            handleApiResponse(json, isSummary, callback)
-                        } catch (e: Exception) {
-                            Log.e(TAG, "Failed to parse OpenAI response: ${e.message}", e)
-                            val errorMessage = "錯誤：無法解析 OpenAI 回應"
-                            addHistory(mapOf("role" to "assistant", "content" to errorMessage), type = if (isSummary) "summary" else "response")
-                            callback(errorMessage)
-                        }
-                    } ?: run {
-                        val errorMessage = "錯誤：無 OpenAI 回應內容"
-                        addHistory(mapOf("role" to "assistant", "content" to errorMessage), type = if (isSummary) "summary" else "response")
-                        callback(errorMessage)
+                override fun onResponse(call: Call, response: Response)
+                {
+                    response.body?.string()?.let()
+                    { responseBody ->
+                        val json = Gson().fromJson(responseBody, Map::class.java) as Map<*, *>
+
+                        handleApiResponse(json)
                     }
                 }
             })
-        }
+    }
 
-    private fun handleApiResponse(json: Map<*, *>, isSummary: Boolean, callback: (String) -> Unit) {
+    private fun handleApiResponse(json: Map<*, *>)
+    {
         val choices = json["choices"] as? List<Map<*, *>>
         val message = choices?.firstOrNull()?.get("message") as? Map<*, *>
 
-        message?.let {
-            val content = it["content"] as? String
-            if (content != null) {
-                Log.i(TAG, "OpenAI response content: $content")
-                addHistory(mapOf("role" to "assistant", "content" to content), type = if (isSummary) "summary" else "response")
-                aici?.handleContent(content)
-                callback(content)
-            } else {
-                Log.e(TAG, "No content in OpenAI response")
-                val errorMessage = "錯誤：OpenAI 回應無內容"
-                addHistory(mapOf("role" to "assistant", "content" to errorMessage), type = if (isSummary) "summary" else "response")
-                callback(errorMessage)
+        message?.let()
+        {
+            val functionCall = it["function_call"] as? Map<*, *>
+            if (functionCall != null)
+            {
+                handleFunctionCall(functionCall)
+                return
             }
-        } ?: run {
-            Log.e(TAG, "Invalid OpenAI response structure")
-            val errorMessage = "錯誤：無效的 OpenAI 回應"
-            addHistory(mapOf("role" to "assistant", "content" to errorMessage), type = if (isSummary) "summary" else "response")
-            callback(errorMessage)
+
+            val content = it["content"] as? String
+            if (content != null)
+            {
+                handleContent(content)
+                return
+            }
         }
     }
 
-    private fun handleFunctionCall(functionCall: Map<*, *>, callback: (String) -> Unit) {
+    private fun handleFunctionCall(functionCall: Map<*, *>?)
+    {
+        if (functionCall == null)
+            return
+
         val arguments = Gson().fromJson(functionCall["arguments"].toString(), Map::class.java) as Map<*, *>
-        val result = aici?.handleFunctionCall(arguments) ?: ""
-        if (result.isNotEmpty()) {
+
+        var result = aici?.handleFunctionCall(arguments) ?: ""
+
+        if (result.isNotEmpty())
+        {
             addHistory(mapOf("role" to "assistant", "content" to result))
+
             aici?.handleContent(result)
-            callback(result)
-        } else {
-            Log.e(TAG, "Function call returned empty result")
-            callback("錯誤：功能調用無結果")
         }
     }
 
@@ -484,7 +252,4 @@ class AIConversation
 
         aici?.handleContent(content)
     }
-
 }
-
-
