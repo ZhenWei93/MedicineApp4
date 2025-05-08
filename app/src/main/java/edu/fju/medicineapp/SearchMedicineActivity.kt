@@ -45,7 +45,7 @@ class SearchMedicineActivity : AppCompatActivity() {
                 // 調用 ApiUtility獲取藥品列表
                 ApiUtility.searchMedicineLists(this, medicineName)
                 {
-                    medicines ->
+                        medicines ->
                     UIUtility.closeKeyboard(this@SearchMedicineActivity, searchMedicineButton)
                     runOnUiThread {
                         if (medicines != null && medicines.isNotEmpty()) {
@@ -57,7 +57,7 @@ class SearchMedicineActivity : AppCompatActivity() {
                     }
                 }
             } else {
-                Toast.makeText(this, "請输入藥品名稱", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "請輸入藥品名稱", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -76,25 +76,26 @@ class SearchMedicineActivity : AppCompatActivity() {
             holder.chineseBrandNameTextView.text = "${medicine.chineseBrandName}"
             holder.englishBrandNameTextView.text = "${medicine.englishBrandName.take(50)}"
 
-            // 設置點擊事件，儲存歷史並跳轉到詳細頁面
+            // 設置點擊事件，允許 GUEST 用戶跳轉並嘗試儲存歷史
             holder.itemView.setOnClickListener {
                 val userId = PreferencesManager.getUserId(holder.itemView.context)
-                if (userId != "N/A") {
+                val intent = Intent(holder.itemView.context, MedicineDetailActivity::class.java)
+                intent.putExtra("MEDICINE_CODE", medicine.medicationCode)
+
+                // 檢查是否需要儲存歷史紀錄
+                if (userId != "N/A" && userId != "GUEST") {
                     lifecycleScope.launch {
                         val result = apiClient.addSearchHistory(userId, medicine.chineseBrandName)
                         result.onSuccess {
                             Toast.makeText(holder.itemView.context, "已儲存搜尋歷史", Toast.LENGTH_SHORT).show()
-                            // 跳轉到詳細頁面
-                            val intent = Intent(holder.itemView.context, MedicineDetailActivity::class.java)
-                            intent.putExtra("MEDICINE_CODE", medicine.medicationCode)
-                            holder.itemView.context.startActivity(intent)
                         }.onFailure { exception ->
                             Toast.makeText(holder.itemView.context, "儲存歷史失敗：${exception.message}", Toast.LENGTH_SHORT).show()
                         }
                     }
-                } else {
-                    Toast.makeText(holder.itemView.context, "請先登入", Toast.LENGTH_SHORT).show()
                 }
+
+                // 總是允許跳轉到 MedicineDetailActivity
+                holder.itemView.context.startActivity(intent)
             }
         }
 
