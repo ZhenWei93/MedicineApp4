@@ -44,11 +44,10 @@
                 android:layout_height="wrap_content"
                 android:text="拍照" />
 
-            <Button
-                android:id="@+id/reTakeButton"
+            <Button android:id="@+id/scanQRButton"
                 android:layout_width="187dp"
                 android:layout_height="wrap_content"
-                android:text="重拍" />
+                android:text="掃描"/>
 
 
         </LinearLayout>

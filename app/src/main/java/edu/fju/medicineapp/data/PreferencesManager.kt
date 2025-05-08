@@ -17,7 +17,7 @@ object PreferencesManager {
 
     // 獲取用戶資料
     fun getUserId(context: Context): String = getPreferences(context).getString(KEY_ID, "N/A") ?: "N/A"
-    fun getUsername(context: Context): String = getPreferences(context).getString(KEY_USERNAME, "N/A") ?: "N/A"
+    fun getUsername(context: Context): String = getPreferences(context).getString(KEY_USERNAME, "訪客") ?: "訪客"
     fun getIdentity(context: Context): String = getPreferences(context).getString(KEY_IDENTITY, "general") ?: "general"
     fun getToken(context: Context): String? = getPreferences(context).getString(KEY_TOKEN, null)
 

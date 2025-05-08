@@ -1,6 +1,7 @@
 package edu.fju.medicineapp
 
 
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
@@ -14,11 +15,14 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.skh.storyteller.DefaultOnInfoListener
 import com.skh.storyteller.Storyteller
 import edu.fju.medicineapp.data.PreferencesManager
 import edu.fju.medicineapp.utility.SOUT
 import edu.fju.medicineapp.utility.UIUtility.closeKeyboard
+import android.Manifest
 
 
 class OpenAIActivity: AppCompatActivity(), AIConversationInterface
@@ -31,6 +35,7 @@ class OpenAIActivity: AppCompatActivity(), AIConversationInterface
     var aiConversation = AIConversation()
     var lastPackageInserSummary = ""
 
+    lateinit var userInfoTextView: TextView
     lateinit var inputTextField: EditText
     lateinit var outputLabel: TextView
     lateinit var responseButton: Button
@@ -42,6 +47,7 @@ class OpenAIActivity: AppCompatActivity(), AIConversationInterface
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_openai)
 
+        userInfoTextView = findViewById<TextView>(R.id.UserInformation)
         inputTextField = findViewById<EditText>(R.id.inputTextField)
         outputLabel = findViewById<TextView>(R.id.outputLabel)
         responseButton = findViewById<Button>(R.id.responseButton)
@@ -60,12 +66,19 @@ class OpenAIActivity: AppCompatActivity(), AIConversationInterface
         var identity = PreferencesManager.getIdentity(this)
 //        identity = "child"
         SOUT.Loge(TAG, "id:$id, username:$username, identityDisplay:$identity")
-//        "baby" -> "幼兒（0-3歲）"
-//        "child" -> "孩童（4-12歲）"
-//        "teenager" -> "青少年（13-18歲）"
-//        "elderly" -> "年長者（65歲以上）"
-//        "pregnant" -> "孕婦"
-//        else -> "一般成人"
+
+        // 將英文代碼轉換成中文描述
+        val identityDisplay = when (identity) {
+            "baby" -> "幼兒（0-3歲）"
+            "child" -> "孩童（4-12歲）"
+            "teenager" -> "青少年（13-18歲）"
+            "elderly" -> "年長者（65歲以上）"
+            "pregnant" -> "孕婦"
+            else -> "一般成人（19-64歲）"
+        }
+
+        userInfoTextView.text = "使用者 : $username  身分 : $identityDisplay"
+
         aiConversation.addHistory(mapOf("role" to "system", "content" to aiConversation.getCharacterRule(identity)))
 
         summaryButton.setOnClickListener()
@@ -91,6 +104,10 @@ class OpenAIActivity: AppCompatActivity(), AIConversationInterface
 
         friendlyReadButton.setOnClickListener()
         {
+            //確認是否開起麥克風
+//            if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+//                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.RECORD_AUDIO), 1)
+//            }
             SOUT.Loge(TAG, "lastPackageInserSummary: $lastPackageInserSummary")
             if (lastPackageInserSummary.isNotEmpty())
                 Storyteller.speak(this, lastPackageInserSummary, DefaultOnInfoListener(this))
@@ -146,19 +163,19 @@ class OpenAIActivity: AppCompatActivity(), AIConversationInterface
                 //"system" -> "系統說：${message["content"]}"     //嘗試隱藏
                 "user" ->
                 {
-                    // "使用者說" 设置为粗体和绿色
+                    // "使用者說" 設置為粗體和綠色
                     val userText = SpannableString("使用者說：${message["content"]}\n\n")
                     userText.setSpan(StyleSpan(Typeface.BOLD), 0, 5, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE) // 加粗 "使用者說"
-                    userText.setSpan(ForegroundColorSpan(Color.MAGENTA), 0, 5, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE) // 设置绿色
+                    userText.setSpan(ForegroundColorSpan(Color.MAGENTA), 0, 5, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE) // 設置綠色
                     spannableStringBuilder.append(userText)
                 }
 
                 "assistantold" ->
                 {
-                    // "助手說" 设置为粗体和蓝色
+                    // "助手說" 設置為粗體和藍色
                     val assistantText = SpannableString("助手說：${message["content"]}\n\n")
                     assistantText.setSpan(StyleSpan(Typeface.BOLD), 0, 4, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE) // 加粗 "助手說"
-                    assistantText.setSpan(ForegroundColorSpan(Color.BLUE), 0, 4, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE) // 设置蓝色
+                    assistantText.setSpan(ForegroundColorSpan(Color.BLUE), 0, 4, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE) // 設置藍色
                     spannableStringBuilder.append(assistantText)
                 }
                 "assistant" ->
