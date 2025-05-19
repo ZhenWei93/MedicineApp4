@@ -23,9 +23,8 @@
                 android:layout_height="wrap_content"
                 android:text="中文藥名: 未知"
                 android:textColor="#009688"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:paddingBottom="8dp" />
+                android:textSize="25sp"
+                android:textStyle="bold" />
 
 <!--            <TextView-->
 <!--                android:id="@+id/similarityTextView"-->
@@ -325,7 +324,7 @@
                 android:id="@+id/packageInsertPathButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="藥品仿單智能助理"
+                android:text="藥品仿單智慧助理"
                 android:textStyle="bold"
                 android:textSize="18dp"
                 android:textColor="#EFFFFF"/>

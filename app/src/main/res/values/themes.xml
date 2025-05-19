@@ -10,5 +10,13 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
+    <!-- 定義 Spinner 下拉選項的樣式 -->
+    <style name="SpinnerItemStyle" parent="@android:style/Widget.TextView">
+        <item name="android:textColor">#0C423F</item>
+        <item name="android:background">#F1F1F1</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:padding">10dp</item>
+    </style>
+
     <style name="Theme.MedicineApp" parent="Base.Theme.MedicineApp" />
 </resources>

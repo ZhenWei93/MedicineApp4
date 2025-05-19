@@ -23,6 +23,7 @@ import edu.fju.medicineapp.data.PreferencesManager
 import edu.fju.medicineapp.utility.SOUT
 import edu.fju.medicineapp.utility.UIUtility.closeKeyboard
 import android.Manifest
+//import androidx.compose.ui.semantics.text
 
 
 class OpenAIActivity: AppCompatActivity(), AIConversationInterface
@@ -77,7 +78,17 @@ class OpenAIActivity: AppCompatActivity(), AIConversationInterface
             else -> "一般成人（19-64歲）"
         }
 
-        userInfoTextView.text = "使用者 : $username  身分 : $identityDisplay"
+        // 設置文字內容、大小和顏色
+        userInfoTextView.text = """
+            【使用者】 : $username
+            【身分】 : $identityDisplay
+        """.trimIndent()
+        userInfoTextView.textSize = 15f // 文字大小，單位為 sp
+        userInfoTextView.setTextColor(Color.parseColor("#0C423F")) // 文字顏色：深青色
+        userInfoTextView.setTypeface(null, Typeface.BOLD) // 可選：加粗文字
+        userInfoTextView.setPadding(10, 8, 16, 8) // 可選：設置內邊距（單位：像素）
+
+        aiConversation.addHistory(mapOf("role" to "system", "content" to aiConversation.getCharacterRule(identity)))
 
         aiConversation.addHistory(mapOf("role" to "system", "content" to aiConversation.getCharacterRule(identity)))
 

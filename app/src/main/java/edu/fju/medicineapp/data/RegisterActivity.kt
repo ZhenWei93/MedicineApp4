@@ -1,10 +1,15 @@
 package edu.fju.medicineapp.data
 
-import android.R
+import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.Spinner
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -15,6 +20,7 @@ import edu.fju.medicineapp.OpenAIActivity.Companion.TAG
 import edu.fju.medicineapp.data.api.ApiClient
 import edu.fju.medicineapp.data.model.User
 import edu.fju.medicineapp.databinding.ActivityRegisterBinding
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class RegisterActivity : AppCompatActivity() {
@@ -35,8 +41,25 @@ class RegisterActivity : AppCompatActivity() {
 
         // 配置 Spinner
         val identityOptions = listOf("幼兒(1-3歲)", "兒童(4-12歲)", "青少年(13-18歲)", "一般成人(19-64歲)", "孕婦", "年長者(65-150歲)")
-        val adapter = ArrayAdapter(this, R.layout.simple_spinner_item, identityOptions)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        val adapter = object : ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, identityOptions) {
+            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+                val view = super.getView(position, convertView, parent) as TextView
+                view.setTextColor(Color.parseColor("#0C423F")) // 選中項字體顏色
+                view.setBackgroundColor(Color.parseColor("#F1F1F1")) // 選中項背景顏色
+                view.textSize = 18f // 文字大小 (單位：sp)
+                view.setPadding(10, 10, 10, 10) // 內邊距 (單位：dp)
+                return view
+            }
+
+            override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
+                val view = super.getDropDownView(position, convertView, parent) as TextView
+                view.setTextColor(Color.parseColor("#0C423F")) // 下拉選項字體顏色
+                view.setBackgroundColor(Color.parseColor("#E0F7FA")) // 下拉選項背景顏色
+                view.textSize = 18f // 文字大小 (單位：sp)
+                view.setPadding(10, 20, 10, 20) // 內邊距 (單位：dp)
+                return view
+            }
+        }
         binding.spinnerIdentity.adapter = adapter
         binding.spinnerIdentity.setSelection(3) // 預設選擇「一般成人」
 
@@ -97,6 +120,9 @@ class RegisterActivity : AppCompatActivity() {
                         username = user.username,
                         identity = user.identity
                     )
+                    // 延遲 1 秒後跳轉
+                    delay(1500L)
+
                     // 跳轉到登入頁面
                     startActivity(Intent(this@RegisterActivity, LoginActivity::class.java))
                 }.onFailure { exception ->

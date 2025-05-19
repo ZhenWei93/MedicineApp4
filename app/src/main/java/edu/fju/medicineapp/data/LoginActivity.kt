@@ -15,6 +15,7 @@ import edu.fju.medicineapp.databinding.ActivityLoginBinding
 import edu.fju.medicineapp.CoverActivity
 import edu.fju.medicineapp.R
 import edu.fju.medicineapp.data.model.LoginRequest
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
@@ -91,6 +92,9 @@ class LoginActivity : AppCompatActivity() {
                         identity = loginResponse.identity,
 //                        token = loginResponse.token
                     )
+                    // 延遲 1 秒後跳轉
+                    delay(1500L)
+
                     // 跳轉到 CoverActivity
                     val intent = Intent(this@LoginActivity, CoverActivity::class.java).apply {
                         putExtra("id", loginResponse.id)

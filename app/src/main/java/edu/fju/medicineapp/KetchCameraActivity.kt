@@ -9,6 +9,8 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Matrix
+import android.media.ExifInterface
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.Uri
@@ -63,12 +65,14 @@ class KetchCameraActivity : AppCompatActivity() {
 
     private val takePictureLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
         if (success) {
-            imageView.setImageURI(photoUri)
+
+            loadBitmapWithCorrectOrientation(this@KetchCameraActivity, photoUri, imageView)
+            //imageView.setImageURI(photoUri) //改回來 1-2
             photoUri?.let { uri ->
                 try {
                     contentResolver.openInputStream(uri)?.use { inputStream ->
                         capturedBitmap = BitmapFactory.decodeStream(inputStream)
-                        imageView.setImageBitmap(capturedBitmap)
+                        //imageView.setImageBitmap(capturedBitmap) //改回來 2-2
                         resultText.text = "請點擊搜尋按鈕進行查詢"
                     }
                 } catch (e: IOException) {
@@ -307,6 +311,78 @@ class KetchCameraActivity : AppCompatActivity() {
 
         })
     }
+
+    fun loadBitmapWithCorrectOrientation(
+        context: Context,
+        uri: Uri,
+        imageView: ImageView,
+        maxWidth: Int = 1024,
+        maxHeight: Int = 1024
+    ) {
+        try {
+            // Step 1: 預先只讀取圖片尺寸 (避免直接加載原始大圖)
+            val options = BitmapFactory.Options().apply {
+                inJustDecodeBounds = true
+            }
+            context.contentResolver.openInputStream(uri)?.use {
+                BitmapFactory.decodeStream(it, null, options)
+            }
+
+            // Step 2: 計算合適的縮放比例 (避免 OOM)
+            options.inSampleSize = calculateInSampleSize(options, maxWidth, maxHeight)
+            options.inJustDecodeBounds = false
+
+            // Step 3: 重新讀取 Bitmap 並進行縮放
+            val bitmap = context.contentResolver.openInputStream(uri)?.use {
+                BitmapFactory.decodeStream(it, null, options)
+            } ?: return
+
+            // Step 4: 讀取 EXIF 並判斷旋轉角度（支援 URI）
+            val inputStreamForExif = context.contentResolver.openInputStream(uri)
+            val exif = inputStreamForExif?.use { ExifInterface(it) }
+            val orientation = exif?.getAttributeInt(
+                ExifInterface.TAG_ORIENTATION,
+                ExifInterface.ORIENTATION_NORMAL
+            ) ?: ExifInterface.ORIENTATION_NORMAL
+
+            val matrix = Matrix()
+            when (orientation) {
+                ExifInterface.ORIENTATION_ROTATE_90 -> matrix.postRotate(90f)
+                ExifInterface.ORIENTATION_ROTATE_180 -> matrix.postRotate(180f)
+                ExifInterface.ORIENTATION_ROTATE_270 -> matrix.postRotate(270f)
+            }
+
+            val rotatedBitmap = Bitmap.createBitmap(
+                bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true
+            )
+
+            // Step 5: 設定到 ImageView
+            imageView.setImageBitmap(rotatedBitmap)
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Toast.makeText(context, "Failed to load image", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {
+        val (height: Int, width: Int) = options.run { outHeight to outWidth }
+        var inSampleSize = 1
+
+        if (height > reqHeight || width > reqWidth) {
+            val halfHeight: Int = height / 2
+            val halfWidth: Int = width / 2
+
+            while ((halfHeight / inSampleSize) >= reqHeight &&
+                (halfWidth / inSampleSize) >= reqWidth) {
+                inSampleSize *= 2
+            }
+        }
+
+        return inSampleSize
+    }
+
+
 }
 
 
