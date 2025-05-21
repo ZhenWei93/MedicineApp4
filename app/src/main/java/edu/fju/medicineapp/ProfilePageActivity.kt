@@ -58,8 +58,6 @@ class ProfilePageActivity : AppCompatActivity() {
         val displayIdentity = when (identity) {
             "elderly" -> "年長者"
             "pregnant" -> "孕婦"
-            "baby" -> "幼兒"
-            "child" -> "孩童"
             "teenager" -> "青少年"
             else -> "一般成人"
         }

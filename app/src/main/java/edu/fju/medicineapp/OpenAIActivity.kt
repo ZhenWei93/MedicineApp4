@@ -70,9 +70,7 @@ class OpenAIActivity: AppCompatActivity(), AIConversationInterface
 
         // 將英文代碼轉換成中文描述
         val identityDisplay = when (identity) {
-            "baby" -> "幼兒（0-3歲）"
-            "child" -> "孩童（4-12歲）"
-            "teenager" -> "青少年（13-18歲）"
+            "teenager" -> "青少年（12-18歲）"
             "elderly" -> "年長者（65歲以上）"
             "pregnant" -> "孕婦"
             else -> "一般成人（19-64歲）"

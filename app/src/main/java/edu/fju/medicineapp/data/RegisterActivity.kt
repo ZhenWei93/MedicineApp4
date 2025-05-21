@@ -40,7 +40,7 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         // 配置 Spinner
-        val identityOptions = listOf("幼兒(1-3歲)", "兒童(4-12歲)", "青少年(13-18歲)", "一般成人(19-64歲)", "孕婦", "年長者(65-150歲)")
+        val identityOptions = listOf( "青少年(12-18歲)", "一般成人(19-64歲)", "孕婦", "年長者(65-150歲)")
         val adapter = object : ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, identityOptions) {
             override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
                 val view = super.getView(position, convertView, parent) as TextView
@@ -61,7 +61,7 @@ class RegisterActivity : AppCompatActivity() {
             }
         }
         binding.spinnerIdentity.adapter = adapter
-        binding.spinnerIdentity.setSelection(3) // 預設選擇「一般成人」
+        binding.spinnerIdentity.setSelection(1) // 預設選擇「一般成人」
 
         // 提交按鈕（註冊）
         binding.buttonRegister.setOnClickListener {
@@ -91,9 +91,7 @@ class RegisterActivity : AppCompatActivity() {
             // 根據 Spinner 選擇映射身分
             val identity = when (selectedIdentity) {
                 "孕婦" -> "pregnant"
-                "幼兒(1-3歲)" -> "baby"
-                "兒童(4-12歲)" -> "child"
-                "青少年(13-18歲)" -> "teenager"
+                "青少年(12-18歲)" -> "teenager"
                 "年長者(65-150歲)" -> "elderly"
                 else -> "general"
             }

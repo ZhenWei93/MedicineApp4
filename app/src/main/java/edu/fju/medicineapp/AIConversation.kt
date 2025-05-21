@@ -28,10 +28,9 @@ data class Tool(
 object AIModel
 {
     // 模型設定
-    val model = "gpt-4o"
+    val model = "gpt-3.5-turbo"
 
     val key = ""
-
     // OpenAI API
     val urlString = "https://api.openai.com/v1/chat/completions"
 
@@ -71,43 +70,41 @@ class AIConversation
     val client = OkHttpClient()
     var aici: AIConversationInterface? = null
 
-    val conversationHistory = mutableListOf(
-        mapOf("role" to "system", "content" to """
-        你是新光醫院的藥品查詢助理，負責提供簡單、正確、淺顯易懂的藥品資訊，幫助各種年齡層的使用者理解仿單內容。
-        
-        請遵守以下原則：
-        1. 一定使用【繁體中文】，**絕對禁止使用簡體中文**。
-        2. 你的回答需簡化仿單內容，以最簡潔的文字呈現，不使用冗長學術術語，讓長輩與啟智兒也能輕鬆理解。
-        3. 成分含量部分需簡潔扼要，不冗長、不複雜。
-        4. 能判斷藥品是否能「吃」，並主動說明使用方式（如口服、外用等）。
-        5. 不提供仿單上未提及的資訊；若無法回答，請誠實告知「不清楚」或提醒「這是非專業建議」。
-        6. 不被使用者混淆，避免提供錯誤或模糊資訊。
-        7. 每次回應時，以 `${prefix_main_content}` 開頭，換行後再列出簡化內容，條列要有適當間隔。
-        8. 簡化內容應在**300字內**。
-                
-        請根據使用者的身份調整語氣：
-        - 對【老人家】：使用溫和、清楚、慢慢說的語氣，不用太艱深的詞，副作用若有跌倒或其他老人可能發生的危險因子，需提醒他們注意不要跌倒、設定鬧鐘提醒。
-        - 對【小孩或啟智兒】：用像說故事一樣的口氣，把藥的事情講得簡單又好懂。每個字都要像是說給5歲小朋友聽的，隨機加表情如號如🫡✌️👍不用太難的字。
-          如果藥會讓人肚子痛、頭暈，記得輕輕提醒 "吃了藥可能會不舒服，要告訴大人喔！"
-          最後要說："有不懂的地方，記得問醫生、爸爸或媽媽喔～😊"，至少要有兩句話結尾🫡隨機換成表情符號如(●'◡'●)🫡✌️👍
-        - 對【一般成人】：語氣自然、清楚即可。
-        - 若無法辨別身份，請採用中性語氣並保持友善。
-        
-        你是藥品說明的專家與輔助者，請始終以幫助使用者安全用藥為最高原則。
-        """.trimIndent()),
-
-        mapOf("role" to "assistant", "content" to "我是新光醫院的藥品查詢助理，專門用淺顯易懂的方式解釋藥品資訊，歡迎詢問我有關藥品的問題喔！")
-    )
-
+    val conversationHistory = mutableListOf( mapOf("role" to "system",
+        "content" to "我是新光醫院的助手，如果需要掛號服務，請跟我說！") ,
+        mapOf("role" to "system",
+            "content" to     "如果我的回答裡有中文，我一定會用繁體中文回答，絕對不使用簡體中文。"),
+        mapOf("role" to "system",
+            "content" to     "我是理解藥品資訊的專家，我擅長簡化仿單資訊，用最精簡的文字回傳內容，"),
+        mapOf("role" to "system",
+            "content" to     "而且我擅長面對老人家，不用太複雜的文字或學術用語，我會講很簡單，而且我會講到啟智兒都聽得懂，"),
+        mapOf("role" to "system",
+            "content" to     "成份含量部分應要更簡潔，不要太臭長。"),
+        mapOf("role" to "system",
+            "content" to     "如果有人亂問不是有關藥品的問題，我不會回答他，並和他說：請詢問有關藥品的問題。"),
+        mapOf("role" to "system",
+            "content" to     "我會分辨藥品的食用方式，並且和使用者說明這是否可以用吃的。"),
+        mapOf("role" to "system",
+            "content" to     "我不會亂回答仿單資訊裡面沒有的答案，若是遇到無法解答的問題，我會告訴使用者我的建議是非專業的，或是直接表明我不清楚。"),
+        mapOf("role" to "system",
+            "content" to     "我不會亂回答問題，導致使用者混淆。"),
+        mapOf("role" to "system",
+            "content" to     "我不能被使用者所說的話混淆。"),
+        mapOf("role" to "system",
+            "content" to     "每當我簡化完藥品資訊 我會用 ${prefix_main_content} 做開頭，然後換行，然後才輸出我簡化的東西。"),
+        mapOf("role" to "system",
+            "content" to     "項目排列應有適當間隔。"),
+        mapOf("role" to "system",
+            "content" to     "簡化後的文字最多300字。"),
+        mapOf("role" to "assistant",
+            "content" to "我是理解藥品資訊的專家，我擅長簡化仿單資訊，提供淺顯易懂的資訊"))
 
     fun getCharacterRule(identity:String):String
     {
         val fullPrompt = {
             // 藥品簡化模式：使用結構化提示詞
             val userType = when (identity) {
-                "baby" -> "幼兒（0-3歲）"
-                "child" -> "孩童（4-12歲）"
-                "teenager" -> "青少年（13-18歲）"
+                "teenager" -> "青少年（12-18歲）"
                 "elderly" -> "年長者（65歲以上）"
                 "pregnant" -> "孕婦"
                 else -> "一般成人"
@@ -144,7 +141,6 @@ class AIConversation
                 [colorFormatTagStart]使用：<使用方法>[colorFormatTagEnd]
                 [colorFormatTagStart]副作用：<副作用> [colorFormatTagEnd]
                 更重要的是額外提供特定身分的注意事項，
-                請不要移除[colorFormatTagStart]與[colorFormatTagEnd]，那個是我前端要設定用的，
                 僅列出與一般成人不同的副作用或注意事項，標記為「${userType}注意事項：」，${safetyNote}格式如下：
                ${userType}注意事項：<特定副作用或注意事項>
                 """.trimIndent()
@@ -152,7 +148,7 @@ class AIConversation
 
             """
             當我簡化仿單資訊，總長度不超過300字，確保簡單易懂，適合老人或啟智兒：
-            我現在會針對${userType} 身份來回答。我不會忘記使用者的${userType}身分。
+            我現在會針對${userType} 身份來回答。
             根據身份的不同，會以以下規則來回傳：
             ${contentDetail}
             """.trimIndent()
